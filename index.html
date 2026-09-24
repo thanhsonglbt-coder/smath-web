@@ -141,6 +141,51 @@ h3.sec{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--
 #gBug .stp.pick-ok{background:var(--ok-soft);border-color:var(--ok)}
 #gBug .stp.pick-bad{background:var(--bad-soft);border-color:var(--bad)}
 #gBug .stp .verdict{float:right;font-size:12px;font-weight:700;letter-spacing:.04em}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* race */
+.rtop{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.rtitle{font-family:var(--display);font-weight:800;font-size:22px;margin:0}
+.rset summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.rset[open]{flex-basis:100%}
+.track{display:grid;gap:6px}
+.lane{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:10px;align-items:center}
+@media (max-width:640px){.lane{grid-template-columns:1fr}}
+.lname{display:flex;align-items:center;gap:6px}
+.lname input{background:transparent;border:0;padding:2px 4px;font-weight:600;min-width:0;flex:1}
+.lname b{font-size:13px;color:var(--ink-2)}
+.sw{width:12px;height:12px;border-radius:3px;flex:none;display:inline-block}
+.road{position:relative;height:40px;border-radius:8px;background:#3A4146;overflow:hidden}
+.road::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed rgba(255,255,255,.45)}
+.road .tick{position:absolute;top:0;bottom:0;border-left:1px solid rgba(255,255,255,.12)}
+.road .finish{position:absolute;right:0;top:0;bottom:0;width:14px;background:repeating-conic-gradient(#fff 0 25%,#111 0 50%) 0 0/7px 7px}
+.car{position:absolute;top:5px;transition:left .9s cubic-bezier(.3,1.3,.5,1)}
+@media (prefers-reduced-motion:reduce){.car{transition:none}}
+.race2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:880px){.race2{grid-template-columns:1fr}}
+.qhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.chip.stT{background:#E4EEF9;color:#2F6FB3}.chip.stM{background:#F9E6E2;color:#B8402F}.chip.stG{background:#EFE8F8;color:#7A4FB0}.chip.stD{background:#FBEFD6;color:#9A6B1E}
+.qtext summary{cursor:pointer;color:var(--ink-2);font-size:13px}
+.qtext div{background:var(--surface-2);border-radius:9px;padding:10px 12px;margin-top:6px;font-size:14.5px}
+.rq{font-family:var(--display);font-weight:800;font-size:clamp(20px,2.4vw,28px);line-height:1.25;margin:4px 0}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:640px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:12px 14px;font-size:clamp(15px,1.6vw,18px);background:var(--surface)}
+.opt b{font-family:var(--mono);width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);flex:none}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.right b{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.rtime{--p:0;font-family:var(--mono);font-weight:700;font-size:28px;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent-soft) calc(var(--p)*100%),var(--surface-2) 0)}
+.rtime:empty{display:none}.rtime.low{color:var(--bad)}
+.arow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;background:var(--surface-2);border-radius:10px;padding:6px 8px}
+.arow .an{font-weight:600;font-size:14px}
+.arow .abtns{display:flex;gap:4px}
+.arow .abtns button{width:34px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font:700 14px var(--mono);cursor:pointer;color:var(--ink)}
+.arow .abtns button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.arow .abtns button.right{background:var(--ok);color:#fff;border-color:var(--ok)}
+.arow .abtns button.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
+.arow .res{grid-column:2/4;font-size:12.5px;color:var(--ink-2)}.arow .res.ok{color:var(--ok);font-weight:700}.arow .res.bad{color:var(--bad);font-weight:700}
+.podium h2{font-family:var(--display);font-size:30px;margin:6px 0}
+.podium ol{display:grid;gap:6px;padding-left:20px;font-size:16px}
+.podium li{display:list-item}.podium .sw{margin-right:6px}
 /* AI tutor */
 .ai{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
 @media (max-width:880px){.ai{grid-template-columns:1fr}}
@@ -177,6 +222,7 @@ h3.sec{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--
   <nav class="tabs" role="tablist" aria-label="Chức năng">
     <button role="tab" id="tab-solve" aria-selected="true" aria-controls="view-solve">Giải theo 4 bước</button>
     <button role="tab" id="tab-game" aria-selected="false" aria-controls="view-game">Thương vụ chớp nhoáng</button>
+    <button role="tab" id="tab-race" aria-selected="false" aria-controls="view-race">Đua xe mô hình hóa</button>
     <button role="tab" id="tab-ai" aria-selected="false" aria-controls="view-ai">Trợ lý AI</button>
   </nav>
 </header>
@@ -307,6 +353,35 @@ h3.sec{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--
   </div>
 </div>
 </section>
+<!-- ============ VIEW: RACE ============ -->
+<section id="view-race" role="tabpanel" aria-labelledby="tab-race" hidden>
+<div style="display:grid;gap:16px">
+  <div class="panel" style="padding:14px 16px;display:grid;gap:10px">
+    <div class="rtop"><h2 class="rtitle">Đua xe mô hình hóa</h2>
+      <details class="rset"><summary>Cài đặt</summary>
+        <div class="row">
+          <label class="field" style="flex:0 1 130px"><span>Số đội</span><select id="rTeams"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+          <label class="field" style="flex:0 1 150px"><span>Số chặng về đích</span><select id="rLen"><option value="5">5 chặng</option><option value="8">8 chặng</option><option value="10">10 chặng</option><option value="12">12 chặng</option></select></label>
+          <label class="field" style="flex:0 1 150px"><span>Thời gian mỗi câu</span><select id="rSec"><option value="20">20 giây</option><option value="30">30 giây</option><option value="45">45 giây</option><option value="60">60 giây</option></select></label>
+          <div class="field" style="flex:1 1 220px"><span>Câu hỏi về bước</span><div class="row"><label class="check"><input type="checkbox" id="rsT"> T</label><label class="check"><input type="checkbox" id="rsM"> M</label><label class="check"><input type="checkbox" id="rsG"> G</label><label class="check"><input type="checkbox" id="rsD"> D</label></div></div>
+        </div>
+      </details>
+    </div>
+    <div id="rTrack" class="track"></div>
+  </div>
+  <div class="race2">
+    <div class="panel" style="padding:18px 20px;display:grid;gap:10px"><div id="rQ"></div></div>
+    <div class="panel" style="padding:16px;display:grid;gap:10px;align-content:start">
+      <div class="rtime" id="rTime" aria-live="polite"></div>
+      <b style="font-size:13px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase">Đáp án của các đội</b>
+      <div id="rAns" style="display:grid;gap:8px"></div>
+      <div class="row"><button class="btn" id="rNext" type="button">Câu hỏi tiếp theo</button><button class="btn gold" id="rReveal" type="button">Chốt đáp án</button></div>
+      <div class="row"><button class="btn ghost sm" id="rReset" type="button">Đua lại từ đầu</button><span class="note" id="rNote"></span></div>
+      <p class="note" style="margin:0">Trả lời đúng: xe tiến 1 chặng. Đáp án của mỗi đội được giấu (●) cho tới khi bấm "Chốt đáp án".</p>
+    </div>
+  </div>
+</div>
+</section>
 <!-- ============ VIEW 3: AI ============ -->
 <section id="view-ai" role="tabpanel" aria-labelledby="tab-ai" hidden>
 <div class="ai">
@@ -399,27 +474,27 @@ const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).tri
 
 /* ---------------- problems ---------------- */
 const PROBS=[
- {id:'dieu',unitX:'mẻ',objWord:'tiền lãi',lab:[['giờ lò sấy','"Mỗi ngày lò sấy hoạt động tối đa 16 giờ" và mỗi mẻ dùng bao nhiêu giờ lò'],['giờ đóng gói','"bộ phận đóng gói tối đa 10 giờ" và mỗi mẻ cần bao nhiêu giờ đóng gói']],ctx:'Chế biến nông sản · Biện pháp 1',name:'Cơ sở chế biến hạt điều',unit:'triệu đồng',
+ {id:'dieu',vk:{x:['rang muoi','rang'],y:['say moc','moc'],any:['me','dieu'],kinds:['điều rang muối','điều sấy mộc'],what:'số mẻ'},unitX:'mẻ',objWord:'tiền lãi',lab:[['giờ lò sấy','"Mỗi ngày lò sấy hoạt động tối đa 16 giờ" và mỗi mẻ dùng bao nhiêu giờ lò'],['giờ đóng gói','"bộ phận đóng gói tối đa 10 giờ" và mỗi mẻ cần bao nhiêu giờ đóng gói']],ctx:'Chế biến nông sản · Biện pháp 1',name:'Cơ sở chế biến hạt điều',unit:'triệu đồng',
   text:'Một cơ sở chế biến hạt điều ở Đức Linh sản xuất theo mẻ. Mỗi mẻ điều rang muối cần 2 giờ lò sấy và 1 giờ đóng gói, lãi 1,2 triệu đồng; mỗi mẻ điều sấy mộc cần 1 giờ lò sấy và 1 giờ đóng gói, lãi 0,9 triệu đồng. Mỗi ngày lò sấy hoạt động tối đa 16 giờ, bộ phận đóng gói tối đa 10 giờ. Nên sản xuất bao nhiêu mẻ mỗi loại để lãi lớn nhất?',
   vx:'số mẻ điều rang muối',vy:'số mẻ điều sấy mộc',
   key:{sense:'max',integer:true,obj:[1.2,0.9],cons:[[2,1,'<=',16],[1,1,'<=',10]]}},
- {id:'xe',unitX:'xe',objWord:'chi phí thuê xe',lab:[['số chỗ ngồi','"cần chở 48 người" – tổng số chỗ của các xe phải đủ cho 48 người'],['kinh phí','"Quỹ lớp có tối đa 9 triệu đồng" và giá mỗi loại xe']],ctx:'Chi phí · Biện pháp 2, Mức 2',name:'Thuê xe đi thác Đambri',unit:'triệu đồng',
+ {id:'xe',vk:{x:['\\b16\\b'],y:['\\b29\\b'],any:['xe'],kinds:['xe 16 chỗ','xe 29 chỗ'],what:'số xe'},unitX:'xe',objWord:'chi phí thuê xe',lab:[['số chỗ ngồi','"cần chở 48 người" – tổng số chỗ của các xe phải đủ cho 48 người'],['kinh phí','"Quỹ lớp có tối đa 9 triệu đồng" và giá mỗi loại xe']],ctx:'Chi phí · Biện pháp 2, Mức 2',name:'Thuê xe đi thác Đambri',unit:'triệu đồng',
   text:'Lớp 10T3 cần chở 48 người đi tham quan. Xe 16 chỗ giá 2,5 triệu đồng/xe, xe 29 chỗ giá 3,8 triệu đồng/xe. Quỹ lớp có tối đa 9 triệu đồng. Thuê bao nhiêu xe mỗi loại để đủ chỗ mà chi phí nhỏ nhất?',
   vx:'số xe 16 chỗ',vy:'số xe 29 chỗ',
   key:{sense:'min',integer:true,obj:[2.5,3.8],cons:[[16,29,'>=',48],[2.5,3.8,'<=',9]]}},
- {id:'bap',unitX:'ha',objWord:'tiền lãi',lab:[['diện tích đất','"Gia đình có 2 ha đất"'],['vốn','"tối đa 55 triệu đồng vốn" và vốn cho mỗi ha'],['ngày công','"160 ngày công" và số ngày công cho mỗi ha']],ctx:'Trồng trọt · Biện pháp 2, Mức 3',name:'Chia 2 ha đất trồng bắp và đậu phộng',unit:'triệu đồng',
+ {id:'bap',vk:{x:['bap','ngo'],y:['dau phong','\\blac\\b','dau'],any:['dien tich','\\bha\\b','trong','dat'],kinds:['bắp','đậu phộng'],what:'diện tích (ha)'},unitX:'ha',objWord:'tiền lãi',lab:[['diện tích đất','"Gia đình có 2 ha đất"'],['vốn','"tối đa 55 triệu đồng vốn" và vốn cho mỗi ha'],['ngày công','"160 ngày công" và số ngày công cho mỗi ha']],ctx:'Trồng trọt · Biện pháp 2, Mức 3',name:'Chia 2 ha đất trồng bắp và đậu phộng',unit:'triệu đồng',
   text:'Gia đình có 2 ha đất trồng bắp và đậu phộng. Bắp: vốn 25 triệu đồng/ha, 60 ngày công/ha, lãi 20 triệu đồng/ha. Đậu phộng: vốn 30 triệu đồng/ha, 100 ngày công/ha, lãi 28 triệu đồng/ha. Gia đình có tối đa 55 triệu đồng vốn và 160 ngày công. Chia diện tích thế nào để lãi lớn nhất?',
   vx:'diện tích trồng bắp (ha)',vy:'diện tích trồng đậu phộng (ha)',
   key:{sense:'max',integer:false,obj:[20,28],cons:[[1,1,'<=',2],[25,30,'<=',55],[60,100,'<=',160]]}},
- {id:'phan',unitX:'kg',objWord:'chi phí mua phân',lab:[['lượng đạm','"cần tối thiểu 12 kg đạm" và lượng đạm trong mỗi kg phân'],['lượng kali','"9 kg kali" và lượng kali trong mỗi kg phân']],ctx:'Dự án · Biện pháp 3',name:'Phối trộn phân bón vườn thanh long',unit:'nghìn đồng',
+ {id:'phan',vk:{x:['\\ba\\b'],y:['\\bb\\b'],any:['phan','\\bkg\\b','khoi luong'],kinds:['phân A','phân B'],what:'khối lượng (kg)'},unitX:'kg',objWord:'chi phí mua phân',lab:[['lượng đạm','"cần tối thiểu 12 kg đạm" và lượng đạm trong mỗi kg phân'],['lượng kali','"9 kg kali" và lượng kali trong mỗi kg phân']],ctx:'Dự án · Biện pháp 3',name:'Phối trộn phân bón vườn thanh long',unit:'nghìn đồng',
   text:'Mỗi đợt bón cần tối thiểu 12 kg đạm và 9 kg kali. Phân A giá 18 nghìn đồng/kg, chứa 0,3 kg đạm và 0,15 kg kali mỗi kg. Phân B giá 15 nghìn đồng/kg, chứa 0,2 kg đạm và 0,3 kg kali mỗi kg. Phối trộn thế nào để chi phí nhỏ nhất?',
   vx:'khối lượng phân A (kg)',vy:'khối lượng phân B (kg)',
   key:{sense:'min',integer:false,obj:[18,15],cons:[[0.3,0.2,'>=',12],[0.15,0.3,'>=',9]]}},
- {id:'cho',unitX:'chuyến',objWord:'chi phí thuê xe',lab:[['khối lượng hàng','"cần chở ít nhất 26 tấn" và mỗi chuyến chở được bao nhiêu tấn'],['số chuyến xe lớn','"Xe lớn chỉ thuê được tối đa 3 chuyến"']],ctx:'Vận chuyển · Bắt lỗi mô hình, câu 6',name:'Chở 26 tấn nông sản',unit:'triệu đồng',
+ {id:'cho',vk:{x:['\\blon\\b'],y:['\\bnho\\b'],any:['chuyen','xe'],kinds:['xe lớn','xe nhỏ'],what:'số chuyến'},unitX:'chuyến',objWord:'chi phí thuê xe',lab:[['khối lượng hàng','"cần chở ít nhất 26 tấn" và mỗi chuyến chở được bao nhiêu tấn'],['số chuyến xe lớn','"Xe lớn chỉ thuê được tối đa 3 chuyến"']],ctx:'Vận chuyển · Bắt lỗi mô hình, câu 6',name:'Chở 26 tấn nông sản',unit:'triệu đồng',
   text:'Hợp tác xã cần chở ít nhất 26 tấn nông sản. Xe lớn chở 5 tấn/chuyến, chi phí 1,6 triệu đồng/chuyến; xe nhỏ chở 3 tấn/chuyến, chi phí 1 triệu đồng/chuyến. Xe lớn chỉ thuê được tối đa 3 chuyến. Thuê mỗi loại bao nhiêu chuyến để chi phí nhỏ nhất?',
   vx:'số chuyến xe lớn',vy:'số chuyến xe nhỏ',
   key:{sense:'min',integer:true,obj:[1.6,1],cons:[[5,3,'>=',26],[1,0,'<=',3]]}},
- {id:'ke',unitX:'kệ',objWord:'tiền lãi',lab:[['giờ cắt ghép','"tối đa 40 giờ cắt ghép" và mỗi kệ cần bao nhiêu giờ cắt ghép'],['giờ sơn','"30 giờ sơn" và mỗi kệ cần bao nhiêu giờ sơn']],ctx:'Sản xuất · Đề kiểm tra sau tác động',name:'Xưởng mộc làm kệ gỗ',unit:'nghìn đồng',
+ {id:'ke',vk:{x:['\\ba\\b'],y:['\\bb\\b'],any:['\\bke\\b'],kinds:['kệ loại A','kệ loại B'],what:'số kệ'},unitX:'kệ',objWord:'tiền lãi',lab:[['giờ cắt ghép','"tối đa 40 giờ cắt ghép" và mỗi kệ cần bao nhiêu giờ cắt ghép'],['giờ sơn','"30 giờ sơn" và mỗi kệ cần bao nhiêu giờ sơn']],ctx:'Sản xuất · Đề kiểm tra sau tác động',name:'Xưởng mộc làm kệ gỗ',unit:'nghìn đồng',
   text:'Kệ loại A cần 2 giờ cắt ghép và 1 giờ sơn, lãi 400 nghìn đồng; kệ loại B cần 1 giờ cắt ghép và 1 giờ sơn, lãi 300 nghìn đồng. Mỗi tuần xưởng có tối đa 40 giờ cắt ghép và 30 giờ sơn. Sản xuất bao nhiêu kệ mỗi loại để lãi lớn nhất?',
   vx:'số kệ loại A',vy:'số kệ loại B',
   key:{sense:'max',integer:true,obj:[400,300],cons:[[2,1,'<=',40],[1,1,'<=',30]]}},
@@ -519,8 +594,8 @@ function renderT(){
   document.querySelectorAll('#senseSeg button').forEach(b=>b.setAttribute('aria-pressed',String(S.sense===b.dataset.v)));
   document.querySelectorAll('#intSeg button').forEach(b=>b.setAttribute('aria-pressed',String(S.integer!==null&&String(+S.integer)===b.dataset.v)));
 }
-$('#vx').addEventListener('input',e=>S.vx=e.target.value);
-$('#vy').addEventListener('input',e=>S.vy=e.target.value);
+$('#vx').addEventListener('input',e=>{S.vx=e.target.value;if(S.done&&S.done.T)applyLocks()});
+$('#vy').addEventListener('input',e=>{S.vy=e.target.value;if(S.done&&S.done.T)applyLocks()});
 $('#senseSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.sense=b.dataset.v;renderT();update()});
 $('#intSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.integer=b.dataset.v==='1';renderT();update()});
 /* checkT: see guided engine */
@@ -678,7 +753,7 @@ function analyzeModel(){
   const ok=nonneg&&!bad.length&&real.length&&real.every(r=>r.st==='same')&&!missing.length&&objSt==='ok';
   return {rows:real,bad,nonneg,missing,objSt,ok};
 }
-function tOK(){const K=prob.key;return S.vx.trim()&&S.vy.trim()&&S.sense===K.sense&&S.integer===K.integer}
+function tOK(){const K=prob.key;return S.vx.trim()&&S.vy.trim()&&S.sense===K.sense&&S.integer===K.integer&&!varIssues().length}
 function keyRegion(){const K=prob.key;return solve(K.cons,true,K.obj,K.sense)}
 function centroidPoint(){const r=keyRegion();const v=r.verts.filter(v=>v.real);const cx=v.reduce((a,p)=>a+p.x,0)/v.length,cy=v.reduce((a,p)=>a+p.y,0)/v.length;
   const K=prob.key;let p=[Math.round(cx*10)/10,Math.round(cy*10)/10];if(K.integer){const q=[Math.round(cx),Math.round(cy)];if(K.cons.every(c=>{const t=c[0]*q[0]+c[1]*q[1];return c[2]==='<='?t<=c[3]:t>=c[3]}))p=q}return p}
@@ -691,7 +766,7 @@ function renderFb(step){
   const box=$('#fb'+step);const L=S.last[step];if(!box)return;if(!L){box.innerHTML='';return}
   if(L.ok){box.innerHTML=`<div class="fb ok">${L.msg}</div>`;return}
   const lv=Math.max(1,Math.min(3,S.hint[step]||1));
-  box.innerHTML=`<div class="fb bad"><div class="hl">Gợi ý mức ${lv}/3</div><ul>${L.issues.map(x=>`<li>${x[Math.min(lv,x.length)-1]}</li>`).join('')}</ul>
+  box.innerHTML=`<div class="fb bad"><div class="hl">Gợi ý mức ${lv}/3</div><ul>${[...new Set(L.issues.map(x=>x[Math.min(lv,x.length)-1]))].map(t=>`<li>${t}</li>`).join('')}</ul>
     <div class="row">${lv<3?`<button class="btn ghost sm" type="button" data-more="${step}">Gợi ý thêm</button>`:''}${lv>=3&&prob.key?`<button class="btn ghost sm" type="button" data-reveal="${step}">Xem lời giải bước này</button>`:''}</div></div>`;
 }
 function wrong(step,issues){S.tries[step]++;S.hint[step]=Math.min(3,Math.max(S.hint[step]+1,1));showFb(step,false,{issues});setChip('chip'+step,'Cần xem lại','bad')}
@@ -724,10 +799,33 @@ $('#checkT').addEventListener('click',()=>{
   if(is.length)wrong('T',is);else right('T','Chính xác! Bước M đã mở: hãy lập hệ ràng buộc và biểu thức F.');
 });
 
+
+const deacc=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/\s+/g,' ').trim();
+function varIssues(){
+  const V=prob.vk;const out=[];if(!V)return out;
+  const tx=deacc(S.vx),ty=deacc(S.vy);const has=(t,arr)=>arr.some(a=>new RegExp(a).test(' '+t+' '));
+  const allowed=new Set([...V.x,...V.y].join(' ').match(/\d+/g)||[]);
+  const ex=`Ví dụ: x là ${prob.vx}; y là ${prob.vy}.`;
+  const both=`Đề có hai loại: ${V.kinds[0]} và ${V.kinds[1]}.`;
+  [['x',tx,S.vx,V.x,V.y,0],['y',ty,S.vy,V.y,V.x,1]].forEach(([n,t,raw,mine,other,k])=>{
+    if(!t)return;
+    if(/-\s*\d/.test(t)){out.push([`${n} không thể là "${raw.trim()}": số lượng không bao giờ âm.`,`${n} là một ĐẠI LƯỢNG chưa biết (ví dụ ${k?prob.vy:prob.vx}), không phải một con số cụ thể, càng không thể là số âm.`,ex]);return}
+    const nums=(t.match(/\d+(?:[.,]\d+)?/g)||[]).filter(x=>!allowed.has(x));
+    if(nums.length){out.push([`Trong đề không có "${nums[0]}" như em ghi ở ${n}.`,`Đọc lại đề. ${both}`,ex]);return}
+    if(!has(t,V.any)){out.push([`${n} chưa nói rõ là đại lượng gì.`,`Hãy ghi rõ ${n} là ${V.what} của loại nào, kèm đơn vị.`,ex]);return}
+    const hm=has(t,mine),ho=has(t,other);
+    if(!hm&&ho){out.push([`${n} đang ghi là ${V.kinds[1-k]} – x và y bị đổi chỗ.`,`Quy ước của bài: x ứng với loại được nhắc trước (${V.kinds[0]}), y ứng với loại nhắc sau (${V.kinds[1]}).`,ex]);return}
+    if(!hm){out.push([`${n} chưa nói rõ là loại nào.`,`${both} ${n==='x'?'x ứng với loại nhắc trước.':'y ứng với loại nhắc sau.'}`,ex]);return}
+    if(ho){out.push([`${n} đang ghi cả hai loại.`,`Mỗi ẩn chỉ ứng với MỘT loại. ${both}`,ex]);return}
+  });
+  if(!out.length&&tx&&tx===ty)out.push(['x và y đang giống nhau.','Hai ẩn phải là hai đại lượng khác nhau.',ex]);
+  return out;
+}
 function buildTIssues(){
   const K=prob.key;
   const is=[];
   if(!S.vx.trim()||!S.vy.trim())is.push(['Em chưa ghi rõ x, y là gì.','Đọc câu hỏi cuối đề: đề hỏi "bao nhiêu … mỗi loại" – đó là hai đại lượng cần tìm. Ghi cả đơn vị.',`Ví dụ: x là ${prob.vx}; y là ${prob.vy}.`]);
+  is.push(...varIssues());
   if(S.sense!==K.sense)is.push([S.sense?'Mục tiêu em chọn chưa đúng.':'Em chưa chọn mục tiêu.','Tìm trong câu hỏi các cụm như "lãi lớn nhất", "chi phí nhỏ nhất", "tiết kiệm nhất".',K.sense==='max'?'Đề muốn tiền lãi lớn nhất → chọn "Lớn nhất".':'Đề muốn chi phí nhỏ nhất → chọn "Nhỏ nhất".']);
   if(S.integer!==K.integer)is.push([S.integer===null?'Em chưa cho biết x, y có phải số nguyên không.':'Em xem lại: x, y có thể nhận giá trị thập phân không?',`x đo bằng "${unitX()}". Trong thực tế có thể có 2,5 ${unitX()} không?`,K.integer?`Không thể có 2,5 ${unitX()} → x, y là số tự nhiên → chọn "Có".`:`${unitX()} là đại lượng đo được, có thể lẻ (ví dụ 1,5 ${unitX()}) → chọn "Không".`]);
   return is;
@@ -862,10 +960,10 @@ function renderD(res,cons,obj,sense,intInfo){
 
 /* ---------------- tabs ---------------- */
 function showTab(which){
-  ['solve','game','ai'].forEach(t=>{$('#view-'+t).hidden=t!==which;$('#tab-'+t).setAttribute('aria-selected',String(t===which))});
+  ['solve','game','race','ai'].forEach(t=>{$('#view-'+t).hidden=t!==which;$('#tab-'+t).setAttribute('aria-selected',String(t===which))});
   store.set('xtu-tab',which); if(which==='ai'&&typeof refreshCtx==='function')refreshCtx();
 }
-$('#tab-solve').addEventListener('click',()=>showTab('solve'));$('#tab-game').addEventListener('click',()=>showTab('game'));$('#tab-ai').addEventListener('click',()=>showTab('ai'));
+$('#tab-solve').addEventListener('click',()=>showTab('solve'));$('#tab-game').addEventListener('click',()=>showTab('game'));$('#tab-ai').addEventListener('click',()=>showTab('ai'));$('#tab-race').addEventListener('click',()=>showTab('race'));
 
 /* ---------------- GAME ---------------- */
 const CARDS=[
@@ -1345,6 +1443,120 @@ $('#exportGame').addEventListener('click',e=>{const c=G.card;const n=$('#gExport
   runExport(()=>c.kind==='bug'?exportBug(c,n):exportProblem(cardSpec(c),n,G.event?` (có biến cố: ${G.event.name})`:''),n,e.currentTarget)});
 (async()=>{try{if(window.claude&&typeof window.claude.use==='function')dlCap=await window.claude.use('downloads')}catch(e){dlCap=null}})();
 
+
+/* ================= ĐUA XE MÔ HÌNH HÓA ================= */
+const CAR_COLORS=['#D8452E','#2F6FB3','#E0A21B','#2E8C6A','#7A4FB0','#D1578F'];
+const LETTERS=['A','B','C','D'];
+let R=store.get('xtu-race',null);
+if(!R||!Array.isArray(R.teams))R={teams:['Đội Đỏ','Đội Xanh','Đội Vàng','Đội Lục'].map(n=>({n,pos:0,ok:0})),len:8,sec:30,steps:{T:true,M:true,G:true,D:true},q:null,qn:0,answers:{},revealed:false,history:[],done:false};
+const saveR=()=>store.set('xtu-race',R);
+const rint=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[rint(a.length)];
+function specs(){return [...PROBS.filter(p=>p.key).map(p=>({...probSpec(p),lab:p.lab,unitX:p.unitX,src:'prob',id:p.id})),...CARDS.map(c=>({...cardSpec(c),src:'card',id:c.name}))]}
+function specLP(sp){const K=sp.key;const r=solve(K.cons,true,K.obj,K.sense);const V=r.verts.filter(v=>v.real);const isI=v=>Math.abs(v-Math.round(v))<1e-9;
+  let fin={x:r.best.x,y:r.best.y,F:r.best.F},ints=null;if(K.integer){ints=intSolve(K.cons,true,K.obj,K.sense,r);if(!(isI(fin.x)&&isI(fin.y))&&ints&&ints.best)fin=ints.best}
+  return {r,V,fin,ints,isI}}
+const pt=(x,y)=>`(${fmt(x)}; ${fmt(y)})`;
+const feasible=(K,x,y)=>x>=-1e-9&&y>=-1e-9&&K.cons.every(c=>{const t=c[0]*x+c[1]*y;return c[2]==='<='?t<=c[3]+1e-9:t>=c[3]-1e-9});
+function mk(step,sp,q,correct,distract,expl){
+  const seen=new Set([correct]);const ds=[];for(const d of distract){if(d&&!seen.has(d)){seen.add(d);ds.push(d)}if(ds.length===3)break}
+  if(ds.length<3)return null;const opts=shuffle([correct,...ds]);return {step,prob:sp.name,text:sp.text,q,opts,ans:opts.indexOf(correct),expl}}
+const GEN={
+  T:[
+    sp=>{const K=sp.key,ow=sp.objWord||'giá trị';const good=`${ow[0].toUpperCase()+ow.slice(1)} ${K.sense==='max'?'lớn nhất':'nhỏ nhất'}`;
+      return mk('T',sp,'Mục tiêu của bài toán là gì?',good,[`${ow[0].toUpperCase()+ow.slice(1)} ${K.sense==='max'?'nhỏ nhất':'lớn nhất'}`,K.sense==='max'?'Chi phí nhỏ nhất':'Tiền lãi lớn nhất','Số sản phẩm nhiều nhất'],`Đọc câu hỏi cuối đề: đề yêu cầu ${good.toLowerCase()}.`)},
+    sp=>{if(sp.src!=='prob')return null;const K=sp.key,u=sp.unitX||'đơn vị';
+      const good=K.integer?`Có, vì ${u} là đại lượng đếm được`:`Không, vì ${u} là đại lượng đo được, có thể lẻ`;
+      return mk('T',sp,`x, y (tính bằng ${u}) có bắt buộc là số nguyên không?`,good,[K.integer?`Không, vì ${u} có thể lẻ như 2,5 ${u}`:`Có, vì ${u} là đại lượng đếm được`,'Có, vì mọi bài toán tối ưu đều có nghiệm nguyên','Không, vì x, y có thể nhận giá trị âm'],K.integer?`Không thể có 2,5 ${u}, nên x, y ∈ ℕ.`:`${u} đo được nên có thể nhận giá trị như 1,5 ${u}.`)}
+  ],
+  M:[
+    sp=>{if(!sp.lab)return null;const K=sp.key;const j=rint(K.cons.length);const c=K.cons[j];const [lab,ph]=sp.lab[j];
+      const flip=[c[0],c[1],c[2]==='<='?'>=':'<=',c[3]],swap=[c[1],c[0],c[2],c[3]];const other=K.cons[(j+1)%K.cons.length];
+      const alt=Math.abs(c[0]-c[1])<1e-9?[c[0]+1,c[1],c[2],c[3]]:swap;
+      return mk('M',sp,`Điều kiện về ${lab} (${ph}) được viết là:`,pretty(...c),[pretty(...flip),pretty(...alt),pretty(...[other[0],other[1],other[2],c[3]]),pretty(c[0],c[1],c[2],Math.round(c[3]*1.5))],`"Tối đa/không quá" → ≤, "ít nhất/tối thiểu" → ≥; hệ số là lượng dùng cho MỘT đơn vị mỗi loại.`)},
+    sp=>{const K=sp.key,o=K.obj;const c=K.cons[0];
+      return mk('M',sp,`Biểu thức F (${sp.objWord||'giá trị'}, đơn vị ${sp.unit}) là:`,'F = '+objStr(o[0],o[1]),['F = '+objStr(o[1],o[0]),(Math.abs(c[0]-o[0])>1e-9||Math.abs(c[1]-o[1])>1e-9)&&(c[0]&&c[1])?'F = '+objStr(c[0],c[1]):null,'F = '+objStr(o[0]*10,o[1]*10),'F = '+objStr(o[0],-o[1]),'F = '+objStr(o[0]+1,o[1]+1)],`Hệ số của x là ${sp.objWord||'giá trị'} của một đơn vị loại thứ nhất (${fmt(o[0])}), của y là ${fmt(o[1])}.`)}
+  ],
+  G:[
+    sp=>{const K=sp.key;const {V}=specLP(sp);const pairs=[];
+      for(let a=0;a<K.cons.length;a++)for(let b=a+1;b<K.cons.length;b++){const [a1,b1,,c1]=K.cons[a],[a2,b2,,c2]=K.cons[b];const det=a1*b2-a2*b1;if(Math.abs(det)<1e-9)continue;const x=(c1*b2-c2*b1)/det,y=(a1*c2-a2*c1)/det;if(V.some(v=>Math.abs(v.x-x)<1e-7&&Math.abs(v.y-y)<1e-7))pairs.push({a,b,x,y})}
+      if(!pairs.length)return null;const P=pick(pairs);const l1=pretty(...K.cons[P.a]).replace(/[≤≥]/,'='),l2=pretty(...K.cons[P.b]).replace(/[≤≥]/,'=');
+      return mk('G',sp,`Giao điểm của hai đường thẳng ${l1} và ${l2} là đỉnh nào?`,pt(P.x,P.y),[pt(P.y,P.x),...V.map(v=>pt(v.x,v.y)),pt(P.x+1,P.y),pt(P.x,P.y+2)],`Giải hệ hai phương trình ${l1}; ${l2} được x = ${fmt(P.x)}, y = ${fmt(P.y)}.`)},
+    sp=>{const K=sp.key,o=K.obj;const {V}=specLP(sp);const nz=V.filter(v=>v.x||v.y);const v=pick(nz.length?nz:V);const F=o[0]*v.x+o[1]*v.y;
+      return mk('G',sp,`Giá trị của F = ${objStr(o[0],o[1])} tại đỉnh ${pt(v.x,v.y)} là:`,fmt(F),[fmt(o[1]*v.x+o[0]*v.y),fmt(F*1.1),fmt(F+o[0]),fmt(F-o[1]),fmt(o[0]*v.y+o[1]*v.x+1)],`F = ${fmt(o[0])}·${fmt(v.x)} + ${fmt(o[1])}·${fmt(v.y)} = ${fmt(F)}.`)},
+    sp=>{const K=sp.key;const {r,V}=specLP(sp);const b=r.best;const others=V.filter(v=>!(Math.abs(v.x-b.x)<1e-9&&Math.abs(v.y-b.y)<1e-9)).map(v=>pt(v.x,v.y));
+      return mk('G',sp,`Với F = ${objStr(K.obj[0],K.obj[1])}, F đạt giá trị ${K.sense==='max'?'lớn nhất':'nhỏ nhất'} tại đỉnh nào của miền nghiệm?`,pt(b.x,b.y),[...shuffle(others),pt(b.y,b.x),pt(0,0)],`Tính F tại các đỉnh: ${V.map(v=>`F${pt(v.x,v.y)} = ${fmt(v.F)}`).join('; ')}.`)}
+  ],
+  D:[
+    sp=>{const K=sp.key;const {r,V,ints}=specLP(sp);let good=null;
+      if(ints&&ints.pts&&ints.pts.length){const c=ints.pts.filter(p=>p[0]||p[1]);const q=pick(c.length?c:ints.pts);good=q}
+      else{const cx=V.reduce((a,v)=>a+v.x,0)/V.length,cy=V.reduce((a,v)=>a+v.y,0)/V.length;good=[Math.round(cx*10)/10,Math.round(cy*10)/10];if(!feasible(K,good[0],good[1]))return null}
+      const bad=[];const mx=Math.max(...V.map(v=>v.x),1),my=Math.max(...V.map(v=>v.y),1);
+      for(let t=0;t<60&&bad.length<6;t++){const x=Math.round(rint(Math.ceil(mx*1.6)+1)),y=Math.round(rint(Math.ceil(my*1.6)+1));if(!feasible(K,x,y))bad.push(pt(x,y))}
+      return mk('D',sp,'Phương án nào dưới đây THỰC HIỆN ĐƯỢC (thỏa mãn mọi điều kiện của đề)?',pt(good[0],good[1]),shuffle(bad),`Thay ${pt(good[0],good[1])} vào từng bất phương trình: ${K.cons.map(c=>`${fmt(c[0]*good[0]+c[1]*good[1])} ${c[2]==='<='?'≤':'≥'} ${fmt(c[3])}`).join('; ')} – đều đúng.`)},
+    sp=>{const K=sp.key;if(!K.integer)return null;const {r,fin,isI}=specLP(sp);const b=r.best;if(isI(b.x)&&isI(b.y))return null;
+      const rd=[Math.round(b.x),Math.round(b.y)],fl=[Math.floor(b.x),Math.floor(b.y)],ce=[Math.ceil(b.x),Math.ceil(b.y)];
+      return mk('D',sp,`Đỉnh tối ưu ${pt(b.x,b.y)} không nguyên. Phương án (số nguyên) tốt nhất là:`,pt(fin.x,fin.y),[pt(...rd),pt(...fl),pt(...ce),pt(fin.y,fin.x)],`Không chỉ làm tròn: dò các điểm nguyên trong miền, F tốt nhất tại ${pt(fin.x,fin.y)} với F = ${fmt(fin.F)}.`)},
+    sp=>{const K=sp.key;const {fin}=specLP(sp);const w=K.sense==='max'?'lớn nhất':'nhỏ nhất',ow=sp.objWord||'giá trị';
+      const good=`${sp.vx} = ${fmt(fin.x)}, ${sp.vy} = ${fmt(fin.y)}; ${ow} ${w} ${fmt(fin.F)} ${sp.unit}`;
+      return mk('D',sp,'Kết luận nào đúng cho bài toán?',good,[`${sp.vx} = ${fmt(fin.y)}, ${sp.vy} = ${fmt(fin.x)}; ${ow} ${w} ${fmt(fin.F)} ${sp.unit}`,`${sp.vx} = ${fmt(fin.x)}, ${sp.vy} = ${fmt(fin.y)}; ${ow} ${w} ${fmt(fin.F*1.2)} ${sp.unit}`,`${sp.vx} = ${fmt(fin.x+1)}, ${sp.vy} = ${fmt(fin.y)}; ${ow} ${w} ${fmt(K.obj[0]*(fin.x+1)+K.obj[1]*fin.y)} ${sp.unit}`],`Phương án tối ưu ${pt(fin.x,fin.y)}: ${sp.vx} = ${fmt(fin.x)}, ${sp.vy} = ${fmt(fin.y)}, F = ${fmt(fin.F)}.`)}
+  ]
+};
+function newQuestion(){
+  const steps=['T','M','G','D'].filter(s=>R.steps[s]);if(!steps.length)return null;const all=specs();
+  for(let t=0;t<80;t++){const st=pick(steps);const g=pick(GEN[st]);let q=null;try{q=g(pick(all))}catch(e){q=null}if(q)return q}return null;
+}
+/* ---------- UI ---------- */
+function carSvg(color){return `<svg viewBox="0 0 64 30" width="64" height="30" aria-hidden="true"><path d="M6 20 L10 12 Q12 9 16 9 L36 9 Q40 9 43 12 L49 16 L57 17 Q61 18 61 22 L61 23 L3 23 L3 21 Q3 20 6 20 Z" fill="${color}"/><path d="M17 11 L27 11 L27 16 L13 16 Z M30 11 L37 11 Q39 11 41 13 L44 16 L30 16 Z" fill="#DDEBF4"/><circle cx="16" cy="23" r="5" fill="#1B1E22"/><circle cx="16" cy="23" r="2" fill="#BFC6CC"/><circle cx="48" cy="23" r="5" fill="#1B1E22"/><circle cx="48" cy="23" r="2" fill="#BFC6CC"/><rect x="57" y="18" width="3" height="2" fill="#FFE08A"/></svg>`}
+function renderTrack(){
+  const tr=$('#rTrack');tr.innerHTML='';const L=R.len;
+  R.teams.forEach((t,i)=>{const lane=document.createElement('div');lane.className='lane';
+    let ticks='';for(let k=1;k<L;k++)ticks+=`<span class="tick" style="left:calc(${k/L*100}% )"></span>`;
+    lane.innerHTML=`<div class="lname"><span class="sw" style="background:${CAR_COLORS[i%6]}"></span><input type="text" id="rname${i}" value="${t.n.replace(/"/g,'&quot;')}" aria-label="Tên đội ${i+1}"><b class="mono">${t.pos}/${L}</b></div><div class="road">${ticks}<span class="finish"></span><div class="car" style="left:calc(${Math.min(t.pos,L)/L} * (100% - 66px))">${carSvg(CAR_COLORS[i%6])}</div></div>`;
+    lane.querySelector('input').addEventListener('input',e=>{t.n=e.target.value;saveR()});
+    tr.appendChild(lane)});
+}
+function renderQ(){
+  const box=$('#rQ');const q=R.q;
+  if(R.done){const order=R.teams.map((t,i)=>({...t,i})).sort((a,b)=>b.pos-a.pos||b.ok-a.ok);
+    box.innerHTML=`<div class="podium"><div class="round">Kết thúc cuộc đua sau ${R.qn} câu</div><h2>${order[0].n} về nhất!</h2><ol>${order.map(t=>`<li><span class="sw" style="background:${CAR_COLORS[t.i%6]}"></span>${t.n} – ${t.pos} chặng, trả lời đúng ${t.ok} câu</li>`).join('')}</ol><div class="row"><button class="btn" id="rAgain" type="button">Đua lại</button></div></div>`;
+    $('#rAgain').addEventListener('click',resetRace);return}
+  if(!q){box.innerHTML=`<div class="round">Sẵn sàng</div><h2 class="rq">Bấm "Câu hỏi tiếp theo" để xuất phát</h2><p class="muted">Mỗi câu hỏi được tạo tự động từ 11 bài toán của sáng kiến. Mỗi đội chọn đáp án A, B, C hoặc D (giơ bảng hoặc cử đại diện bấm). Đội trả lời đúng được tiến 1 chặng; đội nào về đích trước thắng.</p>`;return}
+  const stepName={T:'Bước T – Tình huống',M:'Bước M – Mô hình',G:'Bước G – Giải',D:'Bước D – Diễn giải'}[q.step];
+  box.innerHTML=`<div class="qhead"><span class="chip ${'st'+q.step}">${stepName}</span><span class="round">Câu ${R.qn} · ${q.prob}</span></div>
+    <details class="qtext" ${q.step==='T'||q.step==='M'?'open':''}><summary>Đề bài</summary><div>${q.text}</div></details>
+    <h2 class="rq">${q.q}</h2>
+    <div class="opts">${q.opts.map((o,k)=>`<div class="opt ${R.revealed?(k===q.ans?'right':Object.values(R.answers).includes(k)?'wrong':''):''}"><b>${LETTERS[k]}</b><span>${o}</span></div>`).join('')}</div>
+    ${R.revealed?`<div class="fb ok" style="margin-top:10px"><div><b>Đáp án ${LETTERS[q.ans]}.</b> ${q.expl}</div></div>`:''}`;
+}
+function renderAnswers(){
+  const box=$('#rAns');const q=R.q;if(!q||R.done){box.innerHTML='';return}
+  box.innerHTML=R.teams.map((t,i)=>{const a=R.answers[i];const res=R.revealed?(a===q.ans?'<span class="res ok">+1 chặng</span>':a===undefined?'<span class="res">Không trả lời</span>':'<span class="res bad">Sai</span>'):(a!==undefined?'<span class="res">Đã chọn</span>':'');
+    return `<div class="arow"><span class="sw" style="background:${CAR_COLORS[i%6]}"></span><span class="an">${t.n}</span><div class="abtns">${(!R.revealed&&a!==undefined)?`<button type="button" data-t="${i}" data-clear="1" style="width:auto;padding:0 10px" aria-label="Đổi đáp án của ${t.n}">● Đổi</button>`:LETTERS.map((L,k)=>`<button type="button" data-t="${i}" data-k="${k}" ${R.revealed?'disabled':''} class="${R.revealed&&a===k?(k===q.ans?'right':'wrong'):''}">${L}</button>`).join('')}</div>${res}</div>`}).join('');
+}
+function renderRace(){renderTrack();renderQ();renderAnswers();
+  $('#rReveal').disabled=!R.q||R.revealed||R.done;$('#rNext').disabled=R.done||(R.q&&!R.revealed);
+  $('#rLen').value=String(R.len);$('#rSec').value=String(R.sec);['T','M','G','D'].forEach(s=>$('#rs'+s).checked=!!R.steps[s]);$('#rTeams').value=String(R.teams.length)}
+let rT=null,rLeft=0;
+function rTimer(start){clearInterval(rT);rT=null;const el=$('#rTime');if(!start){el.textContent='';el.style.setProperty('--p','0');return}
+  rLeft=R.sec;const tick=()=>{el.textContent=rLeft+' giây';el.style.setProperty('--p',String(rLeft/R.sec));el.classList.toggle('low',rLeft<=5);if(rLeft<=0){clearInterval(rT);rT=null;el.textContent='Hết giờ!';beep()}rLeft--};tick();rT=setInterval(tick,1000)}
+$('#rAns').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(!b||R.revealed)return;const t=+b.dataset.t;if(b.dataset.clear){delete R.answers[t]}else{R.answers[t]=+b.dataset.k}saveR();renderAnswers()});
+$('#rNext').addEventListener('click',()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
+  const q=newQuestion();if(!q){$('#rNote').textContent='Hãy chọn ít nhất một bước (T, M, G, D) trong phần cài đặt.';return}$('#rNote').textContent='';
+  R.q=q;R.qn++;R.answers={};R.revealed=false;saveR();renderRace();rTimer(true)});
+$('#rReveal').addEventListener('click',()=>{if(!R.q)return;rTimer(false);R.revealed=true;
+  R.teams.forEach((t,i)=>{if(R.answers[i]===R.q.ans){t.pos=Math.min(R.len,t.pos+1);t.ok++}});
+  if(R.teams.some(t=>t.pos>=R.len))setTimeout(()=>{R.done=true;saveR();renderRace()},1400);
+  saveR();renderRace()});
+function resetRace(){R.teams.forEach(t=>{t.pos=0;t.ok=0});R.q=null;R.qn=0;R.answers={};R.revealed=false;R.done=false;saveR();rTimer(false);renderRace()}
+$('#rReset').addEventListener('click',e=>{const b=e.currentTarget;if(b.dataset.confirm){delete b.dataset.confirm;b.textContent='Đua lại từ đầu';resetRace();return}b.dataset.confirm='1';b.textContent='Bấm lần nữa để xác nhận';setTimeout(()=>{if(b.dataset.confirm){delete b.dataset.confirm;b.textContent='Đua lại từ đầu'}},3000)});
+$('#rLen').addEventListener('change',e=>{R.len=+e.target.value;R.teams.forEach(t=>t.pos=Math.min(t.pos,R.len));saveR();renderRace()});
+$('#rSec').addEventListener('change',e=>{R.sec=+e.target.value;saveR()});
+['T','M','G','D'].forEach(s=>$('#rs'+s).addEventListener('change',e=>{R.steps[s]=e.target.checked;saveR()}));
+$('#rTeams').addEventListener('change',e=>{const n=+e.target.value;const names=['Đội Đỏ','Đội Xanh','Đội Vàng','Đội Lục','Đội Tím','Đội Hồng'];
+  while(R.teams.length<n)R.teams.push({n:names[R.teams.length],pos:0,ok:0});R.teams=R.teams.slice(0,n);saveR();renderRace()});
+
 /* ---------------- init ---------------- */
 loadProb('dieu');
 // realistic working state: example partly done so the page shows what it does
@@ -1353,7 +1565,8 @@ S.cons=[['2','1','<=','16'],['1','1','<=','10']];S.nonneg=true;S.objP='1,2';S.ob
 renderT();renderCons();update();setChip('chipT','Đúng','ok');setChip('chipM','Đúng','ok');
 $('#fbM').innerHTML='<div class="fb info">Ví dụ mẫu: bước T và M đã điền sẵn, em làm tiếp bước G. Chọn bài khác trong danh sách để tự làm từ đầu.</div>';
 renderGame();showT();
-{const t=store.get('xtu-tab','solve');if(t==='game'||t==='ai')showTab(t)}
+{const t=store.get('xtu-tab','solve');if(t==='game'||t==='ai'||t==='race')showTab(t)}
+renderRace();
 sel.addEventListener('change',()=>{refreshCtx();if(sampleFn)resetChat()});
 refreshCtx();startAI();
 })();
