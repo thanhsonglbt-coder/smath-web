@@ -217,7 +217,7 @@ h3.sec{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--
 <header class="top">
   <div class="brand">
     <h1>Xưởng <span>Tối Ưu</span> 10</h1>
-    <p>Bài toán tối ưu trong kinh tế, sản xuất · Toán 10 · Chương II · THPT Đức Linh</p>
+    <p>Bài toán tối ưu trong kinh tế, sản xuất · Toán 10 · Chương II · THPT Đức Linh · <span class="mono" title="Phiên bản của app">phiên bản 25/09/2026</span></p>
   </div>
   <nav class="tabs" role="tablist" aria-label="Chức năng">
     <button role="tab" id="tab-solve" aria-selected="true" aria-controls="view-solve">Giải theo 4 bước</button>
@@ -467,34 +467,38 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 const $=s=>document.querySelector(s);
 const EPS=1e-9;
 const fmt=(v,d=2)=>{ if(!isFinite(v)) return '—'; let r=Math.round(v*10**d)/10**d; if(Object.is(r,-0)) r=0; return r.toLocaleString('vi-VN',{maximumFractionDigits:d}); };
-const num=s=>{ if(s===null||s===undefined) return NaN; s=String(s).trim().replace(/\s/g,'').replace(',', '.'); if(s===''||s==='+') return NaN; if(s==='-') return NaN; return Number(s); };
+const num=s=>{ if(s===null||s===undefined) return NaN; s=String(s).trim().replace(/\s/g,'').replace(/,/g,'.'); if(s===''||s==='+'||s==='-') return NaN; if(s.includes('/')){const [a,b]=s.split('/');const A=Number(a),B=Number(b);return (b===undefined||!isFinite(A)||!isFinite(B)||B===0)?NaN:A/B} return Number(s); };
+function frac(v){if(!isFinite(v))return null;if(Math.abs(v*100-Math.round(v*100))<1e-7)return null;for(let q=2;q<=5000;q++){const p=Math.round(v*q);if(Math.abs(v-p/q)<1e-9)return [p,q]}return null}
+const fx=v=>{const f=frac(v);return f?`${f[0]}/${f[1]}`:fmt(v)};
+const fxa=v=>{const f=frac(v);return f?`${f[0]}/${f[1]} ≈ ${fmt(v)}`:fmt(v)};
+const isExact=(input,v)=>Math.abs(input-v)<1e-7*Math.max(1,Math.abs(v));
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const COLORS=['--c1','--c2','--c3','--c4','--c5','--c6'];
 const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 /* ---------------- problems ---------------- */
 const PROBS=[
- {id:'dieu',vk:{x:['rang muoi','rang'],y:['say moc','moc'],any:['me','dieu'],kinds:['điều rang muối','điều sấy mộc'],what:'số mẻ'},unitX:'mẻ',objWord:'tiền lãi',lab:[['giờ lò sấy','"Mỗi ngày lò sấy hoạt động tối đa 16 giờ" và mỗi mẻ dùng bao nhiêu giờ lò'],['giờ đóng gói','"bộ phận đóng gói tối đa 10 giờ" và mỗi mẻ cần bao nhiêu giờ đóng gói']],ctx:'Chế biến nông sản · Biện pháp 1',name:'Cơ sở chế biến hạt điều',unit:'triệu đồng',
+ {id:'dieu',vk:{qty:['\\bso\\b'],x:['rang muoi','rang'],y:['say moc','moc'],any:['me','dieu'],kinds:['điều rang muối','điều sấy mộc'],what:'số mẻ'},unitX:'mẻ',objWord:'tiền lãi',lab:[['giờ lò sấy','"Mỗi ngày lò sấy hoạt động tối đa 16 giờ" và mỗi mẻ dùng bao nhiêu giờ lò'],['giờ đóng gói','"bộ phận đóng gói tối đa 10 giờ" và mỗi mẻ cần bao nhiêu giờ đóng gói']],ctx:'Chế biến nông sản · Biện pháp 1',name:'Cơ sở chế biến hạt điều',unit:'triệu đồng',
   text:'Một cơ sở chế biến hạt điều ở Đức Linh sản xuất theo mẻ. Mỗi mẻ điều rang muối cần 2 giờ lò sấy và 1 giờ đóng gói, lãi 1,2 triệu đồng; mỗi mẻ điều sấy mộc cần 1 giờ lò sấy và 1 giờ đóng gói, lãi 0,9 triệu đồng. Mỗi ngày lò sấy hoạt động tối đa 16 giờ, bộ phận đóng gói tối đa 10 giờ. Nên sản xuất bao nhiêu mẻ mỗi loại để lãi lớn nhất?',
   vx:'số mẻ điều rang muối',vy:'số mẻ điều sấy mộc',
   key:{sense:'max',integer:true,obj:[1.2,0.9],cons:[[2,1,'<=',16],[1,1,'<=',10]]}},
- {id:'xe',vk:{x:['\\b16\\b'],y:['\\b29\\b'],any:['xe'],kinds:['xe 16 chỗ','xe 29 chỗ'],what:'số xe'},unitX:'xe',objWord:'chi phí thuê xe',lab:[['số chỗ ngồi','"cần chở 48 người" – tổng số chỗ của các xe phải đủ cho 48 người'],['kinh phí','"Quỹ lớp có tối đa 9 triệu đồng" và giá mỗi loại xe']],ctx:'Chi phí · Biện pháp 2, Mức 2',name:'Thuê xe đi thác Đambri',unit:'triệu đồng',
+ {id:'xe',vk:{qty:['\\bso\\b'],x:['\\b16\\b'],y:['\\b29\\b'],any:['xe'],kinds:['xe 16 chỗ','xe 29 chỗ'],what:'số xe'},unitX:'xe',objWord:'chi phí thuê xe',lab:[['số chỗ ngồi','"cần chở 48 người" – tổng số chỗ của các xe phải đủ cho 48 người'],['kinh phí','"Quỹ lớp có tối đa 9 triệu đồng" và giá mỗi loại xe']],ctx:'Chi phí · Biện pháp 2, Mức 2',name:'Thuê xe đi thác Đambri',unit:'triệu đồng',
   text:'Lớp 10T3 cần chở 48 người đi tham quan. Xe 16 chỗ giá 2,5 triệu đồng/xe, xe 29 chỗ giá 3,8 triệu đồng/xe. Quỹ lớp có tối đa 9 triệu đồng. Thuê bao nhiêu xe mỗi loại để đủ chỗ mà chi phí nhỏ nhất?',
   vx:'số xe 16 chỗ',vy:'số xe 29 chỗ',
   key:{sense:'min',integer:true,obj:[2.5,3.8],cons:[[16,29,'>=',48],[2.5,3.8,'<=',9]]}},
- {id:'bap',vk:{x:['bap','ngo'],y:['dau phong','\\blac\\b','dau'],any:['dien tich','\\bha\\b','trong','dat'],kinds:['bắp','đậu phộng'],what:'diện tích (ha)'},unitX:'ha',objWord:'tiền lãi',lab:[['diện tích đất','"Gia đình có 2 ha đất"'],['vốn','"tối đa 55 triệu đồng vốn" và vốn cho mỗi ha'],['ngày công','"160 ngày công" và số ngày công cho mỗi ha']],ctx:'Trồng trọt · Biện pháp 2, Mức 3',name:'Chia 2 ha đất trồng bắp và đậu phộng',unit:'triệu đồng',
+ {id:'bap',vk:{qty:['dien tich','\\bha\\b'],x:['bap','ngo'],y:['dau phong','\\blac\\b','dau'],any:['dien tich','\\bha\\b','trong','dat'],kinds:['bắp','đậu phộng'],what:'diện tích (ha)'},unitX:'ha',objWord:'tiền lãi',lab:[['diện tích đất','"Gia đình có 2 ha đất"'],['vốn','"tối đa 55 triệu đồng vốn" và vốn cho mỗi ha'],['ngày công','"160 ngày công" và số ngày công cho mỗi ha']],ctx:'Trồng trọt · Biện pháp 2, Mức 3',name:'Chia 2 ha đất trồng bắp và đậu phộng',unit:'triệu đồng',
   text:'Gia đình có 2 ha đất trồng bắp và đậu phộng. Bắp: vốn 25 triệu đồng/ha, 60 ngày công/ha, lãi 20 triệu đồng/ha. Đậu phộng: vốn 30 triệu đồng/ha, 100 ngày công/ha, lãi 28 triệu đồng/ha. Gia đình có tối đa 55 triệu đồng vốn và 160 ngày công. Chia diện tích thế nào để lãi lớn nhất?',
   vx:'diện tích trồng bắp (ha)',vy:'diện tích trồng đậu phộng (ha)',
   key:{sense:'max',integer:false,obj:[20,28],cons:[[1,1,'<=',2],[25,30,'<=',55],[60,100,'<=',160]]}},
- {id:'phan',vk:{x:['\\ba\\b'],y:['\\bb\\b'],any:['phan','\\bkg\\b','khoi luong'],kinds:['phân A','phân B'],what:'khối lượng (kg)'},unitX:'kg',objWord:'chi phí mua phân',lab:[['lượng đạm','"cần tối thiểu 12 kg đạm" và lượng đạm trong mỗi kg phân'],['lượng kali','"9 kg kali" và lượng kali trong mỗi kg phân']],ctx:'Dự án · Biện pháp 3',name:'Phối trộn phân bón vườn thanh long',unit:'nghìn đồng',
+ {id:'phan',vk:{qty:['khoi luong','\\bkg\\b','\\bso\\b'],x:['\\ba\\b'],y:['\\bb\\b'],any:['phan','\\bkg\\b','khoi luong'],kinds:['phân A','phân B'],what:'khối lượng (kg)'},unitX:'kg',objWord:'chi phí mua phân',lab:[['lượng đạm','"cần tối thiểu 12 kg đạm" và lượng đạm trong mỗi kg phân'],['lượng kali','"9 kg kali" và lượng kali trong mỗi kg phân']],ctx:'Dự án · Biện pháp 3',name:'Phối trộn phân bón vườn thanh long',unit:'nghìn đồng',
   text:'Mỗi đợt bón cần tối thiểu 12 kg đạm và 9 kg kali. Phân A giá 18 nghìn đồng/kg, chứa 0,3 kg đạm và 0,15 kg kali mỗi kg. Phân B giá 15 nghìn đồng/kg, chứa 0,2 kg đạm và 0,3 kg kali mỗi kg. Phối trộn thế nào để chi phí nhỏ nhất?',
   vx:'khối lượng phân A (kg)',vy:'khối lượng phân B (kg)',
   key:{sense:'min',integer:false,obj:[18,15],cons:[[0.3,0.2,'>=',12],[0.15,0.3,'>=',9]]}},
- {id:'cho',vk:{x:['\\blon\\b'],y:['\\bnho\\b'],any:['chuyen','xe'],kinds:['xe lớn','xe nhỏ'],what:'số chuyến'},unitX:'chuyến',objWord:'chi phí thuê xe',lab:[['khối lượng hàng','"cần chở ít nhất 26 tấn" và mỗi chuyến chở được bao nhiêu tấn'],['số chuyến xe lớn','"Xe lớn chỉ thuê được tối đa 3 chuyến"']],ctx:'Vận chuyển · Bắt lỗi mô hình, câu 6',name:'Chở 26 tấn nông sản',unit:'triệu đồng',
+ {id:'cho',vk:{qty:['\\bso\\b'],x:['\\blon\\b'],y:['\\bnho\\b'],any:['chuyen','xe'],kinds:['xe lớn','xe nhỏ'],what:'số chuyến'},unitX:'chuyến',objWord:'chi phí thuê xe',lab:[['khối lượng hàng','"cần chở ít nhất 26 tấn" và mỗi chuyến chở được bao nhiêu tấn'],['số chuyến xe lớn','"Xe lớn chỉ thuê được tối đa 3 chuyến"']],ctx:'Vận chuyển · Bắt lỗi mô hình, câu 6',name:'Chở 26 tấn nông sản',unit:'triệu đồng',
   text:'Hợp tác xã cần chở ít nhất 26 tấn nông sản. Xe lớn chở 5 tấn/chuyến, chi phí 1,6 triệu đồng/chuyến; xe nhỏ chở 3 tấn/chuyến, chi phí 1 triệu đồng/chuyến. Xe lớn chỉ thuê được tối đa 3 chuyến. Thuê mỗi loại bao nhiêu chuyến để chi phí nhỏ nhất?',
   vx:'số chuyến xe lớn',vy:'số chuyến xe nhỏ',
   key:{sense:'min',integer:true,obj:[1.6,1],cons:[[5,3,'>=',26],[1,0,'<=',3]]}},
- {id:'ke',vk:{x:['\\ba\\b'],y:['\\bb\\b'],any:['\\bke\\b'],kinds:['kệ loại A','kệ loại B'],what:'số kệ'},unitX:'kệ',objWord:'tiền lãi',lab:[['giờ cắt ghép','"tối đa 40 giờ cắt ghép" và mỗi kệ cần bao nhiêu giờ cắt ghép'],['giờ sơn','"30 giờ sơn" và mỗi kệ cần bao nhiêu giờ sơn']],ctx:'Sản xuất · Đề kiểm tra sau tác động',name:'Xưởng mộc làm kệ gỗ',unit:'nghìn đồng',
+ {id:'ke',vk:{qty:['\\bso\\b'],x:['\\ba\\b'],y:['\\bb\\b'],any:['\\bke\\b'],kinds:['kệ loại A','kệ loại B'],what:'số kệ'},unitX:'kệ',objWord:'tiền lãi',lab:[['giờ cắt ghép','"tối đa 40 giờ cắt ghép" và mỗi kệ cần bao nhiêu giờ cắt ghép'],['giờ sơn','"30 giờ sơn" và mỗi kệ cần bao nhiêu giờ sơn']],ctx:'Sản xuất · Đề kiểm tra sau tác động',name:'Xưởng mộc làm kệ gỗ',unit:'nghìn đồng',
   text:'Kệ loại A cần 2 giờ cắt ghép và 1 giờ sơn, lãi 400 nghìn đồng; kệ loại B cần 1 giờ cắt ghép và 1 giờ sơn, lãi 300 nghìn đồng. Mỗi tuần xưởng có tối đa 40 giờ cắt ghép và 30 giờ sơn. Sản xuất bao nhiêu kệ mỗi loại để lãi lớn nhất?',
   vx:'số kệ loại A',vy:'số kệ loại B',
   key:{sense:'max',integer:true,obj:[400,300],cons:[[2,1,'<=',40],[1,1,'<=',30]]}},
@@ -683,7 +687,7 @@ function draw(res,cons,obj,intInfo,opt){
     const isBest=showBest&&res.best&&Math.abs(v.x-res.best.x)<1e-9&&Math.abs(v.y-res.best.y)<1e-9;
     el('circle',{cx:X(v.x),cy:Y(v.y),r:isBest?7:4.5,fill:isBest?'var(--gold)':'var(--accent)',stroke:'var(--surface)','stroke-width':2});
     const tx=X(v.x)+8, anchor=tx>W-90?'end':'start';
-    el('text',{x:anchor==='end'?X(v.x)-8:tx,y:Y(v.y)-8,'text-anchor':anchor,'font-size':11.5,'font-weight':isBest?700:500,fill:'var(--ink)','font-family':'JetBrains Mono, monospace'},`(${fmt(v.x)}; ${fmt(v.y)})`);
+    el('text',{x:anchor==='end'?X(v.x)-8:tx,y:Y(v.y)-8,'text-anchor':anchor,'font-size':11.5,'font-weight':isBest?700:500,fill:'var(--ink)','font-family':'JetBrains Mono, monospace'},`(${fx(v.x)}; ${fx(v.y)})`);
   });
   if(intInfo&&intInfo.best&&markInt){const b=intInfo.best;el('rect',{x:X(b.x)-6,y:Y(b.y)-6,width:12,height:12,fill:'none',stroke:'var(--bad)','stroke-width':2.2});}
   }
@@ -706,12 +710,12 @@ function update(){
     if(!obj){html=`<div class="muted">Đã vẽ miền nghiệm. Nhập biểu thức F để tính giá trị tại các đỉnh.</div>`;setChip('chipG','Đã vẽ')}
     else{
       html=`<table class="vt"><thead><tr><th>Đỉnh</th><th>F = ${fmt(obj[0])}x + ${fmt(obj[1])}y</th></tr></thead><tbody>`+
-        real.map(v=>{const b=res.best&&Math.abs(v.x-res.best.x)<1e-9&&Math.abs(v.y-res.best.y)<1e-9;return `<tr class="${b?'best':''}"><td class="mono">(${fmt(v.x)}; ${fmt(v.y)})</td><td class="mono">${fmt(v.F)}${b?(sense==='max'?'  ← lớn nhất':'  ← nhỏ nhất'):''}</td></tr>`}).join('')+`</tbody></table>`;
+        real.map(v=>{const b=res.best&&Math.abs(v.x-res.best.x)<1e-9&&Math.abs(v.y-res.best.y)<1e-9;return `<tr class="${b?'best':''}"><td class="mono">(${fx(v.x)}; ${fx(v.y)})</td><td class="mono">${fxa(v.F)}${b?(sense==='max'?'  ← lớn nhất':'  ← nhỏ nhất'):''}</td></tr>`}).join('')+`</tbody></table>`;
       if(res.verts.some(v=>v.box)) html+=`<p class="note">Miền nghiệm không bị chặn ở phía ngoài khung hình.</p>`;
       if(res.unb) html+=`<div class="fb bad">F không có giá trị ${sense==='max'?'lớn nhất':'nhỏ nhất'} vì miền nghiệm không bị chặn theo hướng đó. Có thể còn thiếu một ràng buộc giới hạn.</div>`;
       setChip('chipG',res.unb?'Không có tối ưu':'Đã tìm đỉnh tối ưu',res.unb?'bad':'ok');
     }
-    if(!revealed('G')&&obj){html='';setChip('chipG',S.tries.G?'Cần xem lại':'Đang làm',S.tries.G?'bad':'');if(S.hint.G>=2)html=`<div class="muted">Các đỉnh: ${real.map(v=>`(${fmt(v.x)}; ${fmt(v.y)})`).join(', ')}</div>`}
+    if(!revealed('G')&&obj){html='';setChip('chipG',S.tries.G?'Cần xem lại':'Đang làm',S.tries.G?'bad':'');if(S.hint.G>=2)html=`<div class="muted">Các đỉnh: ${real.map(v=>`(${fx(v.x)}; ${fx(v.y)})`).join(', ')}</div>`}
     vt.className='';vt.innerHTML=html;
     if(obj&&real.length&&(revealed('G')||S.hint.G>=2)){const Fs=real.map(v=>v.F);let mn=Math.min(0,...Fs),mx=Math.max(...Fs)*1.3||1;const r=$('#kRange');r.min=mn;r.max=mx;r.step=(mx-mn)/400;
       if(kVal===null||kVal<mn||kVal>mx)kVal=(mn+mx)/3;r.value=kVal;$('#kVal').textContent='k = '+fmt(kVal);kb.hidden=false}else kb.hidden=true;
@@ -781,7 +785,7 @@ document.addEventListener('click',e=>{
 function applyLocks(){
   const g=!!prob.key;
   if(g){ // re-validate earlier steps if the student edited them
-    if(S.done.T&&!tOK()){S.done.T=S.done.M=S.done.G=S.done.D=false;setChip('chipT','Cần kiểm tra lại','bad')}
+    if(S.done.T&&!tOK()){S.done.T=S.done.M=S.done.G=S.done.D=false;setChip('chipT','Cần kiểm tra lại','bad');$('#fbT').innerHTML='<div class="fb info">Em vừa sửa bước T – bấm "Kiểm tra bước T" lại.</div>'}
     if(S.done.M&&!analyzeModel().ok){S.done.M=S.done.G=S.done.D=false;setChip('chipM','Cần kiểm tra lại','bad');$('#fbM').innerHTML='<div class="fb info">Mô hình vừa thay đổi – bấm "Kiểm tra mô hình" lại.</div>'}
   }
   const lock={T:false,M:g&&!S.done.T,G:g&&!S.done.M,D:g&&!S.done.G};
@@ -812,6 +816,8 @@ function varIssues(){
     if(/-\s*\d/.test(t)){out.push([`${n} không thể là "${raw.trim()}": số lượng không bao giờ âm.`,`${n} là một ĐẠI LƯỢNG chưa biết (ví dụ ${k?prob.vy:prob.vx}), không phải một con số cụ thể, càng không thể là số âm.`,ex]);return}
     const nums=(t.match(/\d+(?:[.,]\d+)?/g)||[]).filter(x=>!allowed.has(x));
     if(nums.length){out.push([`Trong đề không có "${nums[0]}" như em ghi ở ${n}.`,`Đọc lại đề. ${both}`,ex]);return}
+    if(/\b(tien|gia|chi phi|lai|doanh thu|von|luong)\b/.test(t)&&!/khoi luong/.test(t)){out.push([`${n} là "${raw.trim()}" – đây là tiền (giá trị), không phải đại lượng cần quyết định.`,`Đề hỏi "${prob.key.sense==='max'?'sản xuất':'thuê/mua'} bao nhiêu … mỗi loại": ẩn là ${V.what}, còn tiền là biểu thức F sẽ lập ở bước M.`,ex]);return}
+    if(V.qty&&!has(t,V.qty)){out.push([`${n} là "${raw.trim()}" chưa phải là một đại lượng (một con số).`,`${n} phải là ${V.what} của một loại – hãy ghi rõ "${V.what} …".`,ex]);return}
     if(!has(t,V.any)){out.push([`${n} chưa nói rõ là đại lượng gì.`,`Hãy ghi rõ ${n} là ${V.what} của loại nào, kèm đơn vị.`,ex]);return}
     const hm=has(t,mine),ho=has(t,other);
     if(!hm&&ho){out.push([`${n} đang ghi là ${V.kinds[1-k]} – x và y bị đổi chỗ.`,`Quy ước của bài: x ứng với loại được nhắc trước (${V.kinds[0]}), y ứng với loại nhắc sau (${V.kinds[1]}).`,ex]);return}
@@ -864,16 +870,18 @@ $('#checkG').addEventListener('click',()=>{
   const K=prob.key;if(!K)return;const r=keyRegion();const V=r.verts.filter(v=>v.real);
   const best=K.sense==='max'?Math.max(...V.map(v=>v.F)):Math.min(...V.map(v=>v.F));
   const x=num(S.gx),y=num(S.gy),F=num(S.gF);const is=[];const word=K.sense==='max'?'lớn nhất':'nhỏ nhất';
-  const list=V.map(v=>`(${fmt(v.x)}; ${fmt(v.y)})`).join(', ');
-  const table=V.map(v=>`F(${fmt(v.x)}; ${fmt(v.y)}) = ${fmt(v.F)}`).join('; ');
+  const list=V.map(v=>`(${fx(v.x)}; ${fx(v.y)})`).join(', ');
+  const table=V.map(v=>`F(${fx(v.x)}; ${fx(v.y)}) = ${fxa(v.F)}`).join('; ');
   if(!isFinite(x)||!isFinite(y)||!isFinite(F)){wrong('G',[['Em hãy điền đủ x, y và F của đỉnh tối ưu.',`Các đỉnh của miền nghiệm là các chấm tròn trên hình: ${list}.`,`Tính F tại từng đỉnh: ${table}.`]]);return}
   const hit=V.find(v=>near(v.x,x,0.01)&&near(v.y,y,0.01));
-  if(!hit)is.push([`Điểm (${fmt(x)}; ${fmt(y)}) không phải là một đỉnh của miền nghiệm.`,`Giá trị ${word} của F đạt tại một ĐỈNH. Các đỉnh là: ${list}.`,`Tính F tại từng đỉnh rồi so sánh: ${table}.`]);
+  const exP=hit&&isExact(x,hit.x)&&isExact(y,hit.y);
+  if(!hit)is.push([`Điểm (${fx(x)}; ${fx(y)}) không phải là một đỉnh của miền nghiệm.`,`Giá trị ${word} của F đạt tại một ĐỈNH. Các đỉnh là: ${list}.`,`Tính F tại từng đỉnh rồi so sánh: ${table}.`]);
   else if(!near(hit.F,best,Math.max(1e-6,1e-6*Math.abs(best))))is.push([`Đỉnh (${fmt(x)}; ${fmt(y)}) chưa cho F ${word}.`,`Em đã tính F tại TẤT CẢ các đỉnh chưa? Các đỉnh: ${list}. Có thể kéo thanh "đường cùng mức" bên dưới để thấy đường F = k rời miền nghiệm ở đỉnh nào.`,`Bảng giá trị: ${table}. Đỉnh nào cho F ${word}?`]);
-  else if(!near(F,hit.F,Math.max(0.01,1e-6*Math.abs(hit.F))))is.push(['Đỉnh em chọn đúng rồi, nhưng giá trị F chưa đúng.',`Thay x = ${fmt(hit.x)}, y = ${fmt(hit.y)} vào F = ${fmt(K.obj[0])}x + ${fmt(K.obj[1])}y rồi tính lại.`,`F = ${fmt(K.obj[0])}·${fmt(hit.x)} + ${fmt(K.obj[1])}·${fmt(hit.y)} = ${fmt(hit.F)}.`]);
+  else if(!exP)is.push([`Tọa độ (${S.gx.trim()}; ${S.gy.trim()}) mới là giá trị GẦN ĐÚNG của đỉnh.`,`Giữ giá trị chính xác của tọa độ đỉnh (dạng phân số nếu không chia hết), chỉ làm tròn ở bước D. Hãy giải lại hệ hai phương trình của hai đường thẳng đi qua đỉnh này.`,`Tọa độ chính xác của đỉnh là (${fx(hit.x)}; ${fx(hit.y)}). Nhập dạng phân số, ví dụ ${fx(hit.y)}.`]);
+  else if(!isExact(F,hit.F))is.push(near(F,hit.F,Math.max(0.01,1e-6*Math.abs(hit.F)))?[`F = ${S.gF.trim()} là giá trị đã làm tròn.`,`Tính F từ tọa độ chính xác của đỉnh và giữ kết quả dạng phân số; chỉ làm tròn khi kết luận ở bước D.`,`F = ${fmt(K.obj[0])}·${fx(hit.x)} + ${fmt(K.obj[1])}·${fx(hit.y)} = ${fx(hit.F)}.`]:['Đỉnh em chọn đúng rồi, nhưng giá trị F chưa đúng.',`Thay x = ${fx(hit.x)}, y = ${fx(hit.y)} vào F = ${fmt(K.obj[0])}x + ${fmt(K.obj[1])}y rồi tính lại.`,`F = ${fmt(K.obj[0])}·${fx(hit.x)} + ${fmt(K.obj[1])}·${fx(hit.y)} = ${fx(hit.F)}.`]);
   if(is.length){wrong('G',is);update();return}
   const intNote=K.integer&&(Math.abs(hit.x-Math.round(hit.x))>1e-9||Math.abs(hit.y-Math.round(hit.y))>1e-9)?' Lưu ý: đỉnh này không nguyên – sang bước D em phải xử lý điều đó.':'';
-  right('G',`Đúng! F đạt giá trị ${word} ${fmt(hit.F)} tại đỉnh (${fmt(hit.x)}; ${fmt(hit.y)}).${intNote} Bước D đã mở.`);
+  right('G',`Đúng! F đạt giá trị ${word} ${fxa(hit.F)} tại đỉnh (${fx(hit.x)}; ${fx(hit.y)}).${intNote} Bước D đã mở.`);
 });
 
 /* ---------- step D ---------- */
@@ -885,7 +893,7 @@ $('#checkD').addEventListener('click',()=>{
   if(!isFinite(x)||!isFinite(y)){wrong('D',[['Em hãy điền phương án cuối cùng (x, y).','Phương án cuối cùng thường là đỉnh tối ưu ở bước G – nếu đỉnh đó dùng được trong thực tế.','Kiểm tra: đỉnh ở bước G có thỏa điều kiện của x, y (bước T) không?']]);return}
   const is=[];
   if(K.integer&&(Math.abs(x-Math.round(x))>1e-9||Math.abs(y-Math.round(y))>1e-9)){
-    is.push([`x, y là số ${unitX()}, phải là số tự nhiên.`,`Không thể có ${fmt(x)} hay ${fmt(y)} ${unitX()}. Khi đỉnh tối ưu không nguyên, phải tìm điểm NGUYÊN trong miền nghiệm (các chấm nhỏ trên hình).`,`Không chỉ làm tròn: hãy thử các điểm nguyên sát đường biên gần đỉnh (${fmt(r.best.x)}; ${fmt(r.best.y)}), kiểm tra từng điểm có thỏa hết ràng buộc không và tính F.`])}
+    is.push([`x, y là số ${unitX()}, phải là số tự nhiên.`,`Không thể có ${fmt(x)} hay ${fmt(y)} ${unitX()}. Khi đỉnh tối ưu không nguyên, phải tìm điểm NGUYÊN trong miền nghiệm (các chấm nhỏ trên hình).`,`Không chỉ làm tròn: hãy thử các điểm nguyên sát đường biên gần đỉnh (${fx(r.best.x)}; ${fx(r.best.y)}), kiểm tra từng điểm có thỏa hết ràng buộc không và tính F.`])}
   else{
     const viol=K.cons.map((c,j)=>({c,j,v:c[0]*x+c[1]*y})).filter(o=>o.c[2]==='<='?o.v>o.c[3]+1e-9:o.v<o.c[3]-1e-9);
     if(x<0||y<0)is.push(['x, y không thể âm.','Số lượng, diện tích, khối lượng luôn ≥ 0.','Chọn phương án có x ≥ 0, y ≥ 0.']);
@@ -893,7 +901,7 @@ $('#checkD').addEventListener('click',()=>{
       is.push([`Phương án (${fmt(x)}; ${fmt(y)}) chưa thực hiện được trong thực tế.`,`Kiểm tra lại về ${lab}: ${fmt(o.c[0])}·${fmt(x)} + ${fmt(o.c[1])}·${fmt(y)} = ${fmt(o.v)} có ${sgn(o.c[2])} ${fmt(o.c[3])} không?`,`Phương án này vi phạm điều kiện về ${lab} (${fmt(o.v)} so với giới hạn ${fmt(o.c[3])}). Chọn điểm nằm TRONG miền nghiệm.`])}
     else{const Fv=K.obj[0]*x+K.obj[1]*y;
       if(!near(Fv,T.F,Math.max(0.01,1e-6*Math.abs(T.F))))is.push([`Phương án (${fmt(x)}; ${fmt(y)}) thực hiện được, F = ${fmt(Fv)}. Còn phương án nào tốt hơn không?`,
-        T.fromInt?`Làm tròn tọa độ đỉnh chưa chắc cho phương án tốt nhất. Hãy thử các điểm nguyên sát đường biên gần đỉnh (${fmt(r.best.x)}; ${fmt(r.best.y)}) và so sánh F.`:`Đỉnh tối ưu ở bước G dùng được trong thực tế${K.integer&&vIntOK?' (tọa độ nguyên)':''}. Em đã dùng nó chưa?`,
+        T.fromInt?`Làm tròn tọa độ đỉnh chưa chắc cho phương án tốt nhất. Hãy thử các điểm nguyên sát đường biên gần đỉnh (${fx(r.best.x)}; ${fx(r.best.y)}) và so sánh F.`:`Đỉnh tối ưu ở bước G dùng được trong thực tế${K.integer&&vIntOK?' (tọa độ nguyên)':''}. Em đã dùng nó chưa?`,
         `Phương án tốt nhất: x = ${fmt(T.x)}, y = ${fmt(T.y)}, F = ${fmt(T.F)} ${prob.unit}.`])}
   }
   if(is.length){wrong('D',is);return}
@@ -907,7 +915,7 @@ function revealStep(st){
   if(!prob.key)return;S.seen=S.seen||{};S.seen[st]=true;
   if(st==='T'){fillT();right('T','Đây là lời giải bước T. Em đọc lại đề để hiểu vì sao, rồi làm tiếp bước M.')}
   if(st==='M'){fillM();right('M','Đây là mô hình đúng. So sánh với mô hình em đã lập để thấy chỗ khác nhau, rồi làm tiếp bước G.')}
-  if(st==='G'){const r=keyRegion();S.gx=fmt(r.best.x);S.gy=fmt(r.best.y);S.gF=fmt(r.best.F);$('#gx').value=S.gx;$('#gy').value=S.gy;$('#gF').value=S.gF;right('G','Đây là đỉnh tối ưu. Xem bảng giá trị F bên dưới để thấy vì sao.')}
+  if(st==='G'){const r=keyRegion();S.gx=fx(r.best.x);S.gy=fx(r.best.y);S.gF=fx(r.best.F);$('#gx').value=S.gx;$('#gy').value=S.gy;$('#gF').value=S.gF;right('G','Đây là đỉnh tối ưu. Xem bảng giá trị F bên dưới để thấy vì sao.')}
   if(st==='D'){const T=targetD();S.dx=fmt(T.x);S.dy=fmt(T.y);$('#dx').value=S.dx;$('#dy').value=S.dy;right('D','Đây là phương án tốt nhất. Đọc phần giải thích bên dưới.')}
 }
 $('#fillKey').addEventListener('click',()=>{
@@ -926,10 +934,10 @@ function renderD(res,cons,obj,sense,intInfo){
   const b=res.best;const unit=prob.unit;const items=[];
   const isInt=v=>Math.abs(v-Math.round(v))<1e-9;
   if(S.integer){
-    if(isInt(b.x)&&isInt(b.y)){items.push(`<li>Đỉnh tối ưu (${fmt(b.x)}; ${fmt(b.y)}) có tọa độ nguyên nên là phương án thực hiện được.</li>`);setChip('chipD','Phương án hợp lệ','ok')}
+    if(isInt(b.x)&&isInt(b.y)){items.push(`<li>Đỉnh tối ưu (${fx(b.x)}; ${fx(b.y)}) có tọa độ nguyên nên là phương án thực hiện được.</li>`);setChip('chipD','Phương án hợp lệ','ok')}
     else{
       const r=[Math.round(b.x),Math.round(b.y)];const ok=cons.every(([a,bb,op,c])=>{const v=a*r[0]+bb*r[1];return op==='<='?v<=c+1e-9:v>=c-1e-9})&&(!S.nonneg||(r[0]>=0&&r[1]>=0));
-      items.push(`<li><b>Cảnh báo:</b> đỉnh tối ưu (${fmt(b.x)}; ${fmt(b.y)}) không nguyên – không thể lấy làm đáp án.</li>`);
+      items.push(`<li><b>Cảnh báo:</b> đỉnh tối ưu (${fx(b.x)}; ${fx(b.y)}) không nguyên – không thể lấy làm đáp án.</li>`);
       items.push(`<li>Làm tròn thành (${r[0]}; ${r[1]}): ${ok?`thỏa mãn các ràng buộc, F = ${fmt(obj[0]*r[0]+obj[1]*r[1])}`:'<b>không thỏa mãn</b> các ràng buộc'}.</li>`);
       if(intInfo&&intInfo.best){const ib=intInfo.best;const same=ok&&ib.x===r[0]&&ib.y===r[1];
         items.push(`<li>Dò ${intInfo.count} điểm nguyên trong miền: phương án nguyên tốt nhất là <b>(${ib.x}; ${ib.y})</b>, F = <b>${fmt(ib.F)}</b> ${unit} (ô vuông đỏ trên hình). ${same?'Lần này làm tròn trùng với phương án tốt nhất.':'<b>Làm tròn đỉnh không cho phương án tốt nhất.</b>'}</li>`)}
@@ -937,7 +945,7 @@ function renderD(res,cons,obj,sense,intInfo){
       else items.push('<li>Không có điểm nguyên nào trong miền nghiệm.</li>');
       setChip('chipD','Cần kiểm tra điểm nguyên','bad');
     }
-  } else if(S.integer===false){items.push(`<li>x, y là đại lượng đo liên tục nên phương án (${fmt(b.x)}; ${fmt(b.y)}) chấp nhận được; làm tròn hợp lý theo đơn vị đo.</li>`);setChip('chipD','Phương án hợp lệ','ok')}
+  } else if(S.integer===false){items.push(`<li>x, y là đại lượng đo liên tục nên phương án (${fx(b.x)}; ${fx(b.y)}) chấp nhận được; làm tròn hợp lý theo đơn vị đo.</li>`);setChip('chipD','Phương án hợp lệ','ok')}
   else {items.push('<li>Quay lại bước T: x, y có phải là số nguyên không?</li>');setChip('chipD','Chưa xác định','bad')}
   const ptx=S.integer&&intInfo&&intInfo.best&&!(isInt(b.x)&&isInt(b.y))?[intInfo.best.x,intInfo.best.y]:[b.x,b.y];
   const slack=cons.map(([a,bb,op,c],i)=>{const v=a*ptx[0]+bb*ptx[1];return `(${i+1}): ${fmt(v)} / ${fmt(c)}${Math.abs(v-c)<1e-9?' – dùng hết':''}`});
@@ -1089,7 +1097,7 @@ function keyInfo(){
   const K=prob.key; if(!K) return null;
   const r=solve(K.cons,true,K.obj,K.sense); let best=r.best?{x:r.best.x,y:r.best.y,F:r.best.F}:null;
   if(best&&K.integer&&(Math.abs(best.x-Math.round(best.x))>1e-9||Math.abs(best.y-Math.round(best.y))>1e-9)){const ii=intSolve(K.cons,true,K.obj,K.sense,r);if(ii&&ii.best)best=ii.best}
-  const verts=r.verts.filter(v=>v.real).map(v=>`(${fmt(v.x)}; ${fmt(v.y)}) F=${fmt(v.F)}`).join(', ');
+  const verts=r.verts.filter(v=>v.real).map(v=>`(${fx(v.x)}; ${fx(v.y)}) F=${fxa(v.F)}`).join(', ');
   return `x là ${prob.vx}; y là ${prob.vy}. Mục tiêu: ${K.sense==='max'?'lớn nhất':'nhỏ nhất'}. x, y nguyên: ${K.integer?'có':'không'}.
 Hệ: ${K.cons.map(c=>pretty(c[0],c[1],c[2],c[3])).join('; ')}; x ≥ 0, y ≥ 0. F = ${fmt(K.obj[0])}x + ${fmt(K.obj[1])}y (${prob.unit}).
 Các đỉnh miền nghiệm: ${verts}. Phương án tối ưu: x = ${best?fmt(best.x):'?'}, y = ${best?fmt(best.y):'?'}, F = ${best?fmt(best.F):'?'} ${prob.unit}.`;
@@ -1229,14 +1237,14 @@ function localPlantGen(choice){
     const beats=f=>others.some(o=>K.sense==='max'?o.F>f+1e-9:o.F<f-1e-9);
     if(!beats(wf)||near(wf,tb.F,1e-9)){const sec=others.reduce((b,o)=>b===null||(K.sense==='max'?o.F>b:o.F<b)?o.F:b,null);wf=K.sense==='max'?sec*0.95:sec*1.05}
     wf=Math.round(wf*100)/100;shown=V.map(v=>({...v,show:v===tb?wf:v.F}));
-    err=`Bước G tính sai F tại đỉnh (${fmt(tb.x)}; ${fmt(tb.y)}): đúng là ${fmt(tb.F)}, lời giải ghi ${fmt(wf)} nên chọn nhầm đỉnh.`}
+    err=`Bước G tính sai F tại đỉnh (${fx(tb.x)}; ${fx(tb.y)}): đúng là ${fx(tb.F)}, lời giải ghi ${fmt(wf)} nên chọn nhầm đỉnh.`}
   const ch=shown.reduce((b,v)=>!b||(K.sense==='max'?v.show>b.show+1e-9:v.show<b.show-1e-9)?v:b,null);
   let fin=planFinal(cons,obj,ch);let dText='',gExtra='';
   if(fin.dig)gExtra=` Vì x, y là số tự nhiên, dò các điểm nguyên trong miền: chọn (${fmt(fin.x)}; ${fmt(fin.y)}), F = ${fmt(fin.F)}.`;
   if(st==='D'){
     if(K.integer&&!(isI(ch.x)&&isI(ch.y))){const q={x:Math.round(ch.x),y:Math.round(ch.y)};const Fq=obj[0]*q.x+obj[1]*q.y;gExtra='';
       const feas=cons.every(c=>{const t=c[0]*q.x+c[1]*q.y;return c[2]==='<='?t<=c[3]+1e-9:t>=c[3]-1e-9});
-      err=`Bước D làm tròn tọa độ đỉnh (${fmt(ch.x)}; ${fmt(ch.y)}) thành (${q.x}; ${q.y}) mà không kiểm tra: ${feas?`phương án này thực hiện được nhưng chưa tốt nhất (F = ${fmt(Fq)})`:'phương án này vi phạm ràng buộc'}.`;
+      err=`Bước D làm tròn tọa độ đỉnh (${fx(ch.x)}; ${fx(ch.y)}) thành (${q.x}; ${q.y}) mà không kiểm tra: ${feas?`phương án này thực hiện được nhưng chưa tốt nhất (F = ${fmt(Fq)})`:'phương án này vi phạm ràng buộc'}.`;
       fin={x:q.x,y:q.y,F:Fq};dText=`Làm tròn đỉnh ta được ${prob.vx} là ${fmt(fin.x)}, ${prob.vy} là ${fmt(fin.y)}; ${ow} ${word} là ${fmt(fin.F)} ${prob.unit}.`}
     else{dText=`Vậy ${prob.vx} là ${fmt(fin.y)}, ${prob.vy} là ${fmt(fin.x)}; ${ow} ${word} là ${fmt(fin.F)} ${prob.unit}.`;
       err=`Bước D kết luận nhầm vai trò của x và y: ${prob.vx} phải là ${fmt(fin.x)}, ${prob.vy} phải là ${fmt(fin.y)}.`}
@@ -1245,7 +1253,7 @@ function localPlantGen(choice){
   return {st,err,cons:cons.map(c=>c.slice(0,4)),obj:obj.slice(),verts:shown.map(v=>({x:v.x,y:v.y,F:v.show})),ch:{x:ch.x,y:ch.y},gExtra,
     T:`Gọi x là ${prob.vx}, y là ${prob.vy} (x, y ≥ 0${K.integer?', x, y là số tự nhiên':''}). Các giới hạn trong đề: ${labs.join(', ')}. Mục tiêu: ${ow} ${word}.`,
     M:`Hệ ràng buộc: ${cons.map(c=>pretty(...c)).join('; ')}; x ≥ 0, y ≥ 0. Biểu thức F = ${objStr(obj[0],obj[1])} (${prob.unit}).`,
-    G:`Các đỉnh của miền nghiệm: ${shown.map(v=>`(${fmt(v.x)}; ${fmt(v.y)}) → F = ${fmt(v.show)}`).join('; ')}. F ${word} tại (${fmt(ch.x)}; ${fmt(ch.y)}).${gExtra}`,
+    G:`Các đỉnh của miền nghiệm: ${shown.map(v=>`(${fx(v.x)}; ${fx(v.y)}) → F = ${fx(v.show)}`).join('; ')}. F ${word} tại (${fx(ch.x)}; ${fx(ch.y)}).${gExtra}`,
     D:dText,
     fix:`Hệ đúng: ${K.cons.map(c=>pretty(...c)).join('; ')}; x, y ≥ 0; F = ${objStr(K.obj[0],K.obj[1])}. Phương án đúng: ${prob.vx} là ${fmt(cFinal.x)}, ${prob.vy} là ${fmt(cFinal.y)}; ${ow} ${word} là ${fmt(cFinal.F)} ${prob.unit}.`};
 }
@@ -1338,11 +1346,13 @@ function graphPng(res,cons,obj,intBest,kF){
 }
 /* ---- OMML helpers ---- */
 function mRuns(expr){ // numbers upright (normal text) so "1,2" keeps its comma; letters italic math
-  const out=[];const re=/(\d[\d.]*(?:,\d+)?)|([A-Za-z])|(\s+)|([^\sA-Za-z\d])/g;let m;
+  const out=[];const re=/(-?\d+\/\d+)|(\d[\d.]*(?:,\d+)?)|([A-Za-z])|(\s+)|([^\sA-Za-z\d])/g;let m;
   const rp='<w:rPr><w:rFonts w:ascii="Cambria Math" w:hAnsi="Cambria Math"/></w:rPr>';
-  while((m=re.exec(expr))){if(m[3])continue;
-    if(m[1])out.push(`<m:r><m:rPr><m:sty m:val="p"/></m:rPr>${rp}<m:t>${xesc(m[1])}</m:t></m:r>`);
-    else out.push(`<m:r>${rp}<m:t>${xesc(m[2]||m[4])}</m:t></m:r>`)}
+  const nr=t=>`<m:r><m:rPr><m:sty m:val="p"/></m:rPr>${rp}<m:t>${xesc(t)}</m:t></m:r>`;
+  while((m=re.exec(expr))){if(m[4])continue;
+    if(m[1]){let [a,b]=m[1].split('/');let neg='';if(a.startsWith('-')){neg='-';a=a.slice(1)}if(neg)out.push(`<m:r>${rp}<m:t>−</m:t></m:r>`);out.push(`<m:f><m:num>${nr(a)}</m:num><m:den>${nr(b)}</m:den></m:f>`)}
+    else if(m[2])out.push(nr(m[2]));
+    else out.push(`<m:r>${rp}<m:t>${xesc(m[3]||m[5])}</m:t></m:r>`)}
   return out.join('');
 }
 const MX=expr=>({math:expr});
@@ -1396,8 +1406,8 @@ async function solutionBlocks(spec,images,figId){
   b.push(PX([{img:figId}],{jc:'center'}));
   b.push(PX([{i:'Hình: miền nghiệm (tô màu), đỉnh tối ưu (chấm vàng), đường F = '+fmt(fin.F)+' (nét đứt)'+(dig?', phương án nguyên tốt nhất (ô vuông đỏ)':'')+'. Các đường thẳng: '},...K.cons.flatMap((c,i)=>[`(${i+1}) `,MX(mx(c).replace(/[≤≥]/,'=')),i<K.cons.length-1?'; ':'.'])],{jc:'center'}));
   b.push(PX(['Tính ',MX('F'),' tại các đỉnh:'],{keep:true}));
-  V.forEach(v=>b.push(PX([MX(`F(${fmt(v.x)};${fmt(v.y)})=${fmt(K.obj[0])}·${fmt(v.x)}+${fmt(K.obj[1])}·${fmt(v.y)}=${fmt(v.F)}`)],{ind:567,before:0,after:0})));
-  b.push(PX([`Giá trị ${word} của `,MX('F'),' là ',MX(fmt(r.best.F)),' tại đỉnh ',MX(`(${fmt(r.best.x)};${fmt(r.best.y)})`),'.']));
+  V.forEach(v=>b.push(PX([MX(`F(${fx(v.x)};${fx(v.y)})=${fmt(K.obj[0])}·${fx(v.x)}+${fmt(K.obj[1])}·${fx(v.y)}=${fxa(v.F)}`)],{ind:567,before:0,after:0})));
+  b.push(PX([`Giá trị ${word} của `,MX('F'),' là ',MX(fx(r.best.F)),' tại đỉnh ',MX(`(${fx(r.best.x)};${fx(r.best.y)})`),'.']));
   const dParts=[{b:'Bước D – Diễn giải. '}];
   if(dig)dParts.push('Đỉnh tối ưu không có tọa độ nguyên nên không dùng được trong thực tế; dò các điểm nguyên trong miền nghiệm, phương án tốt nhất là ',MX(`(${fmt(dig.x)};${fmt(dig.y)})`),'. ');
   dParts.push(`Vậy ${spec.vx} là ${fmt(fin.x)}, ${spec.vy} là ${fmt(fin.y)}; khi đó ${ow} ${word} là ${fmt(fin.F)} ${spec.unit}.`);
@@ -1426,7 +1436,7 @@ async function exportBug(card,note){
   x+=PX([{b:'[M] '},'Hệ ràng buộc:'],{keep:true});
   if(d.cons){x+=PX([SYS([...d.cons.map(mx),'x≥0','y≥0'])],{jc:'center'});x+=PX(['Biểu thức ',MX('F='+objM(d.obj)),` (${pr.unit}).`])}else x+=PX(d.M);
   if(d.verts){x+=PX([{b:'[G] '},'Các đỉnh của miền nghiệm và giá trị của F:'],{keep:true});
-    d.verts.forEach(v=>x+=PX([MX(`F(${fmt(v.x)};${fmt(v.y)})=${fmt(v.F)}`)],{ind:567,before:0,after:0}));
+    d.verts.forEach(v=>x+=PX([MX(`F(${fx(v.x)};${fx(v.y)})=${fxa(v.F)}`)],{ind:567,before:0,after:0}));
     x+=PX([`F ${word} tại `,MX(`(${fmt(d.ch.x)};${fmt(d.ch.y)})`),'.'+(d.gExtra||'')])}else x+=PX([{b:'[G] '},d.G]);
   x+=PX([{b:'[D] '},d.D]);
   x+=PX([{b:'Câu hỏi: '},'Lỗi nằm ở bước nào?  A. Bước T    B. Bước M    C. Bước G    D. Bước D']);
@@ -1457,7 +1467,7 @@ function specs(){return [...PROBS.filter(p=>p.key).map(p=>({...probSpec(p),lab:p
 function specLP(sp){const K=sp.key;const r=solve(K.cons,true,K.obj,K.sense);const V=r.verts.filter(v=>v.real);const isI=v=>Math.abs(v-Math.round(v))<1e-9;
   let fin={x:r.best.x,y:r.best.y,F:r.best.F},ints=null;if(K.integer){ints=intSolve(K.cons,true,K.obj,K.sense,r);if(!(isI(fin.x)&&isI(fin.y))&&ints&&ints.best)fin=ints.best}
   return {r,V,fin,ints,isI}}
-const pt=(x,y)=>`(${fmt(x)}; ${fmt(y)})`;
+const pt=(x,y)=>`(${fx(x)}; ${fx(y)})`;
 const feasible=(K,x,y)=>x>=-1e-9&&y>=-1e-9&&K.cons.every(c=>{const t=c[0]*x+c[1]*y;return c[2]==='<='?t<=c[3]+1e-9:t>=c[3]-1e-9});
 function mk(step,sp,q,correct,distract,expl){
   const seen=new Set([correct]);const ds=[];for(const d of distract){if(d&&!seen.has(d)){seen.add(d);ds.push(d)}if(ds.length===3)break}
@@ -1482,11 +1492,11 @@ const GEN={
     sp=>{const K=sp.key;const {V}=specLP(sp);const pairs=[];
       for(let a=0;a<K.cons.length;a++)for(let b=a+1;b<K.cons.length;b++){const [a1,b1,,c1]=K.cons[a],[a2,b2,,c2]=K.cons[b];const det=a1*b2-a2*b1;if(Math.abs(det)<1e-9)continue;const x=(c1*b2-c2*b1)/det,y=(a1*c2-a2*c1)/det;if(V.some(v=>Math.abs(v.x-x)<1e-7&&Math.abs(v.y-y)<1e-7))pairs.push({a,b,x,y})}
       if(!pairs.length)return null;const P=pick(pairs);const l1=pretty(...K.cons[P.a]).replace(/[≤≥]/,'='),l2=pretty(...K.cons[P.b]).replace(/[≤≥]/,'=');
-      return mk('G',sp,`Giao điểm của hai đường thẳng ${l1} và ${l2} là đỉnh nào?`,pt(P.x,P.y),[pt(P.y,P.x),...V.map(v=>pt(v.x,v.y)),pt(P.x+1,P.y),pt(P.x,P.y+2)],`Giải hệ hai phương trình ${l1}; ${l2} được x = ${fmt(P.x)}, y = ${fmt(P.y)}.`)},
+      return mk('G',sp,`Giao điểm của hai đường thẳng ${l1} và ${l2} là đỉnh nào?`,pt(P.x,P.y),[pt(P.y,P.x),...V.map(v=>pt(v.x,v.y)),pt(P.x+1,P.y),pt(P.x,P.y+2)],`Giải hệ hai phương trình ${l1}; ${l2} được x = ${fx(P.x)}, y = ${fx(P.y)}.`)},
     sp=>{const K=sp.key,o=K.obj;const {V}=specLP(sp);const nz=V.filter(v=>v.x||v.y);const v=pick(nz.length?nz:V);const F=o[0]*v.x+o[1]*v.y;
-      return mk('G',sp,`Giá trị của F = ${objStr(o[0],o[1])} tại đỉnh ${pt(v.x,v.y)} là:`,fmt(F),[fmt(o[1]*v.x+o[0]*v.y),fmt(F*1.1),fmt(F+o[0]),fmt(F-o[1]),fmt(o[0]*v.y+o[1]*v.x+1)],`F = ${fmt(o[0])}·${fmt(v.x)} + ${fmt(o[1])}·${fmt(v.y)} = ${fmt(F)}.`)},
+      return mk('G',sp,`Giá trị của F = ${objStr(o[0],o[1])} tại đỉnh ${pt(v.x,v.y)} là:`,fmt(F),[fmt(o[1]*v.x+o[0]*v.y),fmt(F*1.1),fmt(F+o[0]),fmt(F-o[1]),fmt(o[0]*v.y+o[1]*v.x+1)],`F = ${fmt(o[0])}·${fx(v.x)} + ${fmt(o[1])}·${fx(v.y)} = ${fmt(F)}.`)},
     sp=>{const K=sp.key;const {r,V}=specLP(sp);const b=r.best;const others=V.filter(v=>!(Math.abs(v.x-b.x)<1e-9&&Math.abs(v.y-b.y)<1e-9)).map(v=>pt(v.x,v.y));
-      return mk('G',sp,`Với F = ${objStr(K.obj[0],K.obj[1])}, F đạt giá trị ${K.sense==='max'?'lớn nhất':'nhỏ nhất'} tại đỉnh nào của miền nghiệm?`,pt(b.x,b.y),[...shuffle(others),pt(b.y,b.x),pt(0,0)],`Tính F tại các đỉnh: ${V.map(v=>`F${pt(v.x,v.y)} = ${fmt(v.F)}`).join('; ')}.`)}
+      return mk('G',sp,`Với F = ${objStr(K.obj[0],K.obj[1])}, F đạt giá trị ${K.sense==='max'?'lớn nhất':'nhỏ nhất'} tại đỉnh nào của miền nghiệm?`,pt(b.x,b.y),[...shuffle(others),pt(b.y,b.x),pt(0,0)],`Tính F tại các đỉnh: ${V.map(v=>`F${pt(v.x,v.y)} = ${fxa(v.F)}`).join('; ')}.`)}
   ],
   D:[
     sp=>{const K=sp.key;const {r,V,ints}=specLP(sp);let good=null;
